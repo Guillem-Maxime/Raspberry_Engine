@@ -13,6 +13,7 @@ struct AttribPointerInfo
 template<typename T>
 struct VertexBase
 {
+    virtual ~VertexBase() {}
 	constexpr GLenum GetUnit() const;
 	virtual void GetAttribPointerInfo(std::vector<AttribPointerInfo>& outAttribPointerInfos) const = 0;
 };
@@ -35,6 +36,7 @@ struct Vertex1P1N1U : VertexBase<GLfloat>
 	glm::vec3 m_Normal{ 0.0f, 0.0f, 0.0f };
 	glm::vec2 m_Texture{ 0.0f, 0.0f };
 
+    virtual ~Vertex1P1N1U() {}
     virtual void GetAttribPointerInfo(std::vector<AttribPointerInfo>& outAttribPointerInfos) const override;    
 };
 
