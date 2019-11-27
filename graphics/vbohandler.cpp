@@ -31,5 +31,5 @@ void VBOHandler::BufferData() const
 
 void VBOHandler::AttribAndEnablePointer() const
 {
-	m_Mesh.AttribAndEnablePointer();
+	//m_Mesh.AttribAndEnablePointer();
 }

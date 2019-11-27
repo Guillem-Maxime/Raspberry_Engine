@@ -23,7 +23,15 @@ VAOHandler.o: vaohandler.cpp
 	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
 	@echo "    	CXX        $@"
 
-vbohandler.o: vbohandler.cpp
+VBOhandler.o: vbohandler.cpp
+	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
+	@echo "    	CXX        $@"
+
+Mesh.o: mesh.cpp
+	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
+	@echo "    	CXX        $@"
+
+Vertex.o: vertex.cpp
 	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
 	@echo "    	CXX        $@"
 

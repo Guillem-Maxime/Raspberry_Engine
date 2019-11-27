@@ -19,10 +19,11 @@ public:
 	void ComputeBuffer() const;
 	void BindBuffer() const;
 	void BufferData() const;
-	void AttribPointer() const;
+	void AttribAndEnablePointer() const;
 
 private:
 	const GLenum m_BufferType;
 	GLenum m_BufferUsage;
-	Mesh m_Mesh;
+	GLuint m_BufferId{0};
+    Mesh m_Mesh;
 };

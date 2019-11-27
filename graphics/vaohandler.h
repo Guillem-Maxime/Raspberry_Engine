@@ -3,7 +3,6 @@
 #include "graphicsheader.h"
 
 #include "program.h"
-#include "shader.h"
 #include "vbohandler.h"
 
 class VAOHandler

@@ -11,7 +11,7 @@ INCLUDE := $(MAKE_DIR)/
 
 CXX = clang++
 
-EXEC = Rasp_Earth_Display
+EXEC = Rasp_Earth_Display.exe
 DEBUG = yes
 CXXFLAGS = -std=c++17 -W -Wall -pedantic -fPIC -I$(INCLUDE)
 ifeq ($(DEBUG),yes)
