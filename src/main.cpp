@@ -87,17 +87,20 @@ void InitTriangles(std::array<GLuint,numVAOs>& VAOs, std::array<GLuint, numVBOs>
     secondVertices.push_back(v2);
     secondVertices.push_back(v3);
 */
-    GLfloat secondVertices[3][3] = 
+	
+    GLfloat secondVertices[24] = 
     {
-          { 0.90, -0.85, 0.00}
-        , { 0.90,  0.90, 0.00}
-        , {-0.85,  0.90, 0.00}
+           0.90, -0.85, 0.00, 0.00, 0.00, 0.00
+        ,  0.90,  0.90, 0.00, 0.00, 0.00, 0.00
+        , -0.85,  0.90, 0.00, 0.00, 0.00, 0.00
     };
 
     glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(secondVertices), secondVertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(vPosition, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-    glEnableVertexAttribArray(vPosition);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (void*)(3*sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
     /*
     std::vector<AttribPointerInfo> infos;
     v1.GetAttribPointerInfo(infos);
