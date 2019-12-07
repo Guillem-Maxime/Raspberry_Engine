@@ -2,6 +2,7 @@
 
 #include "graphicsheader.h"
 #include "mesh.h"
+#include "openglobjecthandler.h"
 
 struct VBOInitializer
 {
@@ -14,18 +15,21 @@ struct VBOInitializer
 	VBOInitializer(const GLenum bufferType, const GLenum bufferUsage, const Mesh& mesh) : m_BufferType(bufferType), m_BufferUsage(bufferUsage), m_Mesh(mesh) {}
 };
 
-class VBOHandler
+class VBOHandler : public OpenGLObjectHandler
 {
 public:
-	VBOHandler() = default;
+	explicit VBOHandler() = default;
 	explicit VBOHandler(const VBOInitializer& initializer);
 	virtual ~VBOHandler();
-
+	
 	void Init(const VBOInitializer& initializer);
 	void Bind() const;
 	void Unbind() const;
 	void Compute() const;
 	void Draw() const;
+
+protected:
+	virtual void GenerateGLObjectId() override;
 
 private:
 	std::vector<AttribPointerInfo> m_AttribPointerInfos;
@@ -34,7 +38,6 @@ private:
 	GLenum m_BufferType;
 	GLenum m_BufferUsage;
 	GLenum m_DrawMode;
-	bool m_IsInitialized{false};
 	
 	void BufferData() const;
 	void AttribAndEnablePointer() const;

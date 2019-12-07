@@ -7,13 +7,17 @@ VBOHandler::VBOHandler(const VBOInitializer& initializer)
 
 void VBOHandler::Init(const VBOInitializer& initializer)
 {
-	m_IsInitialized = true;
+	InitInternal();
 	m_Mesh = initializer.m_Mesh;
 	m_BufferType = initializer.m_BufferType;
 	m_BufferUsage = initializer.m_BufferUsage;
 	m_DrawMode = initializer.m_DrawMode;
-	glGenBuffers(1, &m_BufferId);
 	Vertex1P1N1U::GetAttribPointerInfos(m_AttribPointerInfos);
+}
+
+void VBOHandler::GenerateGLObjectId()
+{
+	glGenBuffers(1, &m_BufferId);
 }
 
 VBOHandler::~VBOHandler()
@@ -24,7 +28,7 @@ VBOHandler::~VBOHandler()
 void VBOHandler::Compute() const
 {
 	Bind();
-	if(m_IsInitialized)
+	if(IsInitialized())
 	{
 		BufferData();
 		AttribAndEnablePointer();
@@ -37,7 +41,14 @@ void VBOHandler::Compute() const
 
 void VBOHandler::Bind() const
 {
-	glBindBuffer(m_BufferType, m_BufferId);
+	if(IsInitialized())
+	{
+		glBindBuffer(m_BufferType, m_BufferId);
+	}
+	else
+	{
+		std::cerr << "VBO Is Not Initialized ID : " << m_BufferId << std::endl;
+	}
 }
 
 void VBOHandler::BufferData() const

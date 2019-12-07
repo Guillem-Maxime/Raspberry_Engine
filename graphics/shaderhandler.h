@@ -2,21 +2,28 @@
 
 #include "graphicsheader.h"
 
+#include "openglobjecthandler.h"
+
 struct ShaderInfos
 {
-    const std::string shaderName{""};
+    std::string shaderName{""};
     GLenum shaderType{GL_NONE};
 };
 
-class Shader
+class ShaderHandler : public OpenGLObjectHandler
 {
 public:
-	Shader(const ShaderInfos& infos);
-	virtual ~Shader();
+	explicit ShaderHandler() = default;
+	explicit ShaderHandler(const ShaderInfos& infos);
+	virtual ~ShaderHandler();
 
+	void Init(const ShaderInfos& infos);
 	inline GLuint GetShaderId() const { return m_ShaderId; }
 
 	static const std::string ms_ShaderDirectory;
+
+protected:
+	virtual void GenerateGLObjectId() override;
 
 private:
 	ShaderInfos m_ShaderInfos{""};

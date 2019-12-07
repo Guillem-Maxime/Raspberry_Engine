@@ -4,7 +4,7 @@ MAKE_DIR = $(MAKEFILE_PATH:/makefile=)
 OBJ_DIR			:= $(MAKE_DIR)/objects
 SRC_DIR			:= $(MAKE_DIR)/src
 
-GRAPHICS_DIR		:= $(MAKE_DIR)/graphics
+GRAPHICS_DIR	:= $(MAKE_DIR)/graphics
 UTILS_DIR		:= $(MAKE_DIR)/utils
 
 INCLUDE := $(MAKE_DIR)/

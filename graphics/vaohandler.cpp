@@ -1,7 +1,17 @@
 #include "vaohandler.h"
 
-VAOHandler::VAOHandler(const Program& program)
-	: m_Program(program)
+VAOHandler::VAOHandler(const ProgramHandler& program)
+{
+	Init(program);
+}
+
+void VAOHandler::Init(const ProgramHandler& program)
+{
+	InitInternal();
+	m_Program = program;
+}
+
+void VAOHandler::GenerateGLObjectId()
 {
 	glGenVertexArrays(1, &m_VAOId);
 }
@@ -13,7 +23,14 @@ VAOHandler::~VAOHandler()
 
 void VAOHandler::Bind() const
 {
-	glBindVertexArray(m_VAOId);
+	if(IsInitialized())
+	{
+		glBindVertexArray(m_VAOId);
+	}
+	else
+	{
+		std::cerr << "VAO Not Initialized ID : " << m_VAOId << std::endl;
+	}
 }
 
 void VAOHandler::Unbind() const

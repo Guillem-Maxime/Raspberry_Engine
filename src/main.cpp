@@ -5,8 +5,8 @@
 #include <GL/freeglut.h>
 #include <GLFW/glfw3.h>
 
-#include "graphics/shader.h"
-#include "graphics/program.h"
+#include "graphics/shaderhandler.h"
+#include "graphics/programhandler.h"
 #include "graphics/vertex.h"
 #include "graphics/mesh.h"
 #include "graphics/vbohandler.h"
@@ -24,9 +24,9 @@ int main(int argc, char** argv)
     glutInit(&argc, argv);
 	InitOpenGL();
 
-    Shader vertShader{ {vertexShader, GL_VERTEX_SHADER} };
-    Shader fragShader{ {fragmentShader, GL_FRAGMENT_SHADER} };
-    Program program({vertShader, fragShader}); 
+    ShaderHandler vertShader{ {vertexShader, GL_VERTEX_SHADER} };
+    ShaderHandler fragShader{ {fragmentShader, GL_FRAGMENT_SHADER} };
+    ProgramHandler program({vertShader, fragShader}); 
 
     VAOHandler vao1(program);
 	VAOHandler vao2(program);
@@ -35,10 +35,10 @@ int main(int argc, char** argv)
 
     while(1)
     {
-	glClear(GL_COLOR_BUFFER_BIT);
-	vao1.Draw();
-	vao2.Draw();
-	glFlush();
+		glClear(GL_COLOR_BUFFER_BIT);
+		vao1.Draw();
+		vao2.Draw();
+		glFlush();
     }
 
     return 0;

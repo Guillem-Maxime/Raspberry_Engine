@@ -11,11 +11,11 @@ $(TARGET): $(OBJ)
 	@mv $(TARGET) $(OBJ_DIR)/
 	@echo "    	$(TARGET) move to $(OBJ_DIR)"
 
-Shader.o: shader.cpp
+Shader.o: shaderhandler.cpp
 	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
 	@echo "    	CXX        $@"
 
-Program.o: program.cpp
+Program.o: programhandler.cpp
 	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
 	@echo "    	CXX        $@"
 
@@ -32,6 +32,10 @@ Mesh.o: mesh.cpp
 	@echo "    	CXX        $@"
 
 Vertex.o: vertex.cpp
+	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
+	@echo "    	CXX        $@"
+
+TextureHandler.o: texturehandler.cpp
 	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
 	@echo "    	CXX        $@"
 

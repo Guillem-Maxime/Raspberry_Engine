@@ -1,19 +1,21 @@
-#include "shader.h"
-
-#include <iostream>
-#include <fstream>
-#include <sstream>
+#include "shaderhandler.h"
 
 #include "utils/fileutils.h"
 
-const std::string Shader::ms_ShaderDirectory = "shaders/";
+const std::string ShaderHandler::ms_ShaderDirectory = "shaders/";
 
-Shader::Shader(const ShaderInfos& shaderInfos)
-	: m_ShaderInfos(shaderInfos)
+ShaderHandler::ShaderHandler(const ShaderInfos& shaderInfos)
 {
+	Init(shaderInfos);
+}
+
+void ShaderHandler::Init(const ShaderInfos& infos)
+{
+	m_ShaderInfos = infos;
 	if(IsValidShaderType())
 	{
-		m_ShaderId = glCreateShader(m_ShaderInfos.shaderType);
+		InitInternal();
+		GenerateGLObjectId();
 		ReadShaderSource();
 		const GLchar* shaderSource{m_ShaderSource.c_str()  };
 		glShaderSource(m_ShaderId, 1, &shaderSource, nullptr);
@@ -26,18 +28,23 @@ Shader::Shader(const ShaderInfos& shaderInfos)
 	}
 }
 
-Shader::~Shader()
+void ShaderHandler::GenerateGLObjectId()
+{
+	m_ShaderId = glCreateShader(m_ShaderInfos.shaderType);
+}
+
+ShaderHandler::~ShaderHandler()
 {
 	glDeleteShader(m_ShaderId);
 }
 
-void Shader::ReadShaderSource()
+void ShaderHandler::ReadShaderSource()
 {
-	const std::string shaderFileName = Shader::ms_ShaderDirectory + m_ShaderInfos.shaderName;
+	const std::string shaderFileName = ShaderHandler::ms_ShaderDirectory + m_ShaderInfos.shaderName;
 	FileUtils::ReadFile(shaderFileName, m_ShaderSource);
 }
 
-void Shader::CheckShaderCompilation() const
+void ShaderHandler::CheckShaderCompilation() const
 {
 	int success{0};
 	glGetShaderiv(m_ShaderId, GL_COMPILE_STATUS, &success);
@@ -52,7 +59,7 @@ void Shader::CheckShaderCompilation() const
 	}
 }
 
-constexpr bool Shader::IsValidShaderType() const
+constexpr bool ShaderHandler::IsValidShaderType() const
 {
 	switch(m_ShaderInfos.shaderType)
 	{
@@ -68,7 +75,7 @@ constexpr bool Shader::IsValidShaderType() const
 	}
 }
 
-constexpr std::string_view Shader::GetShaderTypeString() const
+constexpr std::string_view ShaderHandler::GetShaderTypeString() const
 {
 	switch(m_ShaderInfos.shaderType)
 	{
