@@ -1,6 +1,8 @@
 SRC = $(wildcard *.cpp)
 OBJ = $(SRC:.cpp=.o)
 
+INCLUDE_DIR =
+
 RASP_EARTH_DISPLAY_LIB = $(OBJ_DIR)/*
 
 $(EXEC):$(OBJ) $(RASP_EARTH_DISPLAY_LIB)
@@ -9,7 +11,7 @@ $(EXEC):$(OBJ) $(RASP_EARTH_DISPLAY_LIB)
 	@mv -v $(EXEC) $(MAKE_DIR)
 
 main.o:	main.cpp
-	@$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
+	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $<
 	@echo "   	CXX      $@"
 
 .PHONY: clean

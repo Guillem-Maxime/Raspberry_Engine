@@ -7,6 +7,7 @@
 class Mesh
 {
 public:
+	Mesh(const std::vector<Vertex1P1N1U>& vertices);
 
     GLuint GetSize() const;
     const Vertex1P1N1U* GetRaw() const;

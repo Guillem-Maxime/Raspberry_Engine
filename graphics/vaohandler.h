@@ -8,12 +8,16 @@
 class VAOHandler
 {
 public:
-	VAOHandler();
+	VAOHandler(const Program& program);
 	virtual ~VAOHandler();
 
+	void Bind() const;
+	void Unbind() const;
+	void Compute() const;
+	void Draw() const;
+	void AddVBO(VBOHandler& vbo);
 private:
 	GLuint m_VAOId{0};
-	std::vector<Shader> m_Shaders{};
-	std::vector<Program> m_Programs{};
+	Program m_Program;
 	std::vector<VBOHandler> m_VBOs{};
 };

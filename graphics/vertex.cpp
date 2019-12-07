@@ -1,6 +1,6 @@
 #include "vertex.h"
 
-void Vertex1P1N1U::GetAttribPointerInfo(std::vector<AttribPointerInfo>& outAttribPointerInfos) const
+void Vertex1P1N1U::GetAttribPointerInfo(std::vector<AttribPointerInfo>& outAttribPointerInfos)
 {
     outAttribPointerInfos.clear();
 	outAttribPointerInfos.reserve(3);
@@ -18,7 +18,7 @@ void Vertex1P1N1U::GetAttribPointerInfo(std::vector<AttribPointerInfo>& outAttri
 		normalInfo.m_Position = 1;
 		normalInfo.m_Size = 3;
 		normalInfo.m_Stride = stride;
-		normalInfo.m_Offset = 3 * sizeof(GLfloat);
+		normalInfo.m_Offset = sizeof(glm::vec3);
 		outAttribPointerInfos.push_back(normalInfo);
 	}
 	{
@@ -26,7 +26,7 @@ void Vertex1P1N1U::GetAttribPointerInfo(std::vector<AttribPointerInfo>& outAttri
 		textureInfo.m_Position = 2;
 		textureInfo.m_Size = 2;
 		textureInfo.m_Stride = stride;
-		textureInfo.m_Offset = 6 * sizeof(GLfloat);
+		textureInfo.m_Offset = sizeof(glm::vec3) + sizeof(glm::vec3);
 		outAttribPointerInfos.push_back(textureInfo);
 	}
 }
