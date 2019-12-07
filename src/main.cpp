@@ -16,11 +16,36 @@ std::string vertexShader = "vert.glsl";
 
 std::string fragmentShader = "frag.glsl";
 
-void InitTriangles(VAOHandler& vao);
+void InitOpenGL();
+void InitTriangles(VAOHandler& vao1, VAOHandler& vao2);
 
 int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
+	InitOpenGL();
+
+    Shader vertShader{ {vertexShader, GL_VERTEX_SHADER} };
+    Shader fragShader{ {fragmentShader, GL_FRAGMENT_SHADER} };
+    Program program({vertShader, fragShader}); 
+
+    VAOHandler vao1(program);
+	VAOHandler vao2(program);
+
+    InitTriangles(vao1, vao2);
+
+    while(1)
+    {
+	glClear(GL_COLOR_BUFFER_BIT);
+	vao1.Draw();
+	vao2.Draw();
+	glFlush();
+    }
+
+    return 0;
+}
+
+void InitOpenGL()
+{
     glutInitDisplayMode(GLUT_RGBA);
     glutInitWindowSize(800, 600);
     glutInitContextVersion(3, 3);
@@ -31,28 +56,11 @@ int main(int argc, char** argv)
     {
         std::cerr << "Unable to Initialize glew" << std::endl;
     }
-
-    Shader vertShader{ {vertexShader, GL_VERTEX_SHADER} };
-    Shader fragShader{ {fragmentShader, GL_FRAGMENT_SHADER} };
-    Program program({vertShader, fragShader}); 
-
-    VAOHandler vao(program);
-
-    InitTriangles(vao);
-
-    while(1)
-    {
-	glClear(GL_COLOR_BUFFER_BIT);
-	vao.Draw();
-	glFlush();
-    }
-
-    return 0;
 }
 
-void InitTriangles(VAOHandler& vao)
+void InitTriangles(VAOHandler& vao1, VAOHandler& vao2)
 {
-    vao.Bind();
+    vao1.Bind();
     	
 	std::vector<Vertex1P1N1U> firstVertices{};
 	firstVertices.reserve(3);
@@ -63,18 +71,16 @@ void InitTriangles(VAOHandler& vao)
     firstVertices.push_back(v1);
     firstVertices.push_back(v2);
 	firstVertices.push_back(v3);
-	Mesh firstMesh(firstVertices);
-
+	Mesh firstMesh;
+	firstMesh.SetVertices(firstVertices);
 	VBOInitializer firstVBOInit{firstMesh};
 	VBOHandler firstVBO{firstVBOInit};
     
-	vao.AddVBO(firstVBO);
-	
-	//firstVBO.Compute();
-   	//firstVBO.Unbind(); 
-    //glBindVertexArray(0);
+	vao1.SetVBO(firstVBO);
+	vao1.Compute();
+    vao1.Unbind();
  
-	//glBindVertexArray(VAOs[1]);
+	vao2.Bind();
 
 	std::vector<Vertex1P1N1U> secondVertices{};
 	secondVertices.reserve(3);
@@ -85,15 +91,13 @@ void InitTriangles(VAOHandler& vao)
     secondVertices.push_back(v4);
     secondVertices.push_back(v5);
 	secondVertices.push_back(v6);
-	Mesh secondMesh(secondVertices);
-
+	Mesh secondMesh;
+	secondMesh.SetVertices(secondVertices);
 	VBOInitializer secondVBOInit{secondMesh};
 	VBOHandler secondVBO{secondVBOInit};
     
-	vao.AddVBO(secondVBO);
-	//secondVBO.Compute();
-    
-	vao.Compute();
-	vao.Unbind();
+	vao2.SetVBO(secondVBO);
+	vao2.Compute();
+	vao2.Unbind();
     
 }

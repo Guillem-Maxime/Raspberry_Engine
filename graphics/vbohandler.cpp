@@ -1,12 +1,19 @@
 #include "vbohandler.h"
 
 VBOHandler::VBOHandler(const VBOInitializer& initializer)
-	: m_BufferType(initializer.m_BufferType)
-	, m_BufferUsage(initializer.m_BufferUsage)
-	, m_DrawMode(initializer.m_DrawMode)
-	, m_Mesh(initializer.m_Mesh)
 {
+	Init(initializer);
+}
+
+void VBOHandler::Init(const VBOInitializer& initializer)
+{
+	m_IsInitialized = true;
+	m_Mesh = initializer.m_Mesh;
+	m_BufferType = initializer.m_BufferType;
+	m_BufferUsage = initializer.m_BufferUsage;
+	m_DrawMode = initializer.m_DrawMode;
 	glGenBuffers(1, &m_BufferId);
+	Vertex1P1N1U::GetAttribPointerInfos(m_AttribPointerInfos);
 }
 
 VBOHandler::~VBOHandler()
@@ -17,8 +24,15 @@ VBOHandler::~VBOHandler()
 void VBOHandler::Compute() const
 {
 	Bind();
-	BufferData();
-	AttribAndEnablePointer();
+	if(m_IsInitialized)
+	{
+		BufferData();
+		AttribAndEnablePointer();
+	}
+	else
+	{
+		std::cout << "[ERROR] VBO ID : " << m_BufferId << " IS NOT INITIALIZED" << std::endl;
+	}
 }
 
 void VBOHandler::Bind() const
@@ -33,13 +47,11 @@ void VBOHandler::BufferData() const
 
 void VBOHandler::AttribAndEnablePointer() const
 {
-    std::vector<AttribPointerInfo> infos;
-	Vertex1P1N1U::GetAttribPointerInfo(infos);
-    for(const auto& info : infos)
+    for(const auto& info : m_AttribPointerInfos)
     {
-        glVertexAttribPointer(info.m_Position, info.m_Size, GL_FLOAT, GL_FALSE, info.m_Stride, (void*)info.m_Offset);
+		glVertexAttribPointer(info.m_Position, info.m_Size, GL_FLOAT, GL_FALSE, info.m_Stride, (void*)info.m_Offset);
         glEnableVertexAttribArray(info.m_Position);
-	}	
+	}
 }
 
 void VBOHandler::Unbind() const

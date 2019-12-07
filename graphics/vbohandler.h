@@ -17,20 +17,24 @@ struct VBOInitializer
 class VBOHandler
 {
 public:
-	VBOHandler(const VBOInitializer& initializer);
+	VBOHandler() = default;
+	explicit VBOHandler(const VBOInitializer& initializer);
 	virtual ~VBOHandler();
 
+	void Init(const VBOInitializer& initializer);
 	void Bind() const;
 	void Unbind() const;
 	void Compute() const;
 	void Draw() const;
 
 private:
-	const GLenum m_BufferType;
+	std::vector<AttribPointerInfo> m_AttribPointerInfos;
+    Mesh m_Mesh;
+	GLuint m_BufferId{0};
+	GLenum m_BufferType;
 	GLenum m_BufferUsage;
 	GLenum m_DrawMode;
-	GLuint m_BufferId{0};
-    Mesh m_Mesh;
+	bool m_IsInitialized{false};
 	
 	void BufferData() const;
 	void AttribAndEnablePointer() const;

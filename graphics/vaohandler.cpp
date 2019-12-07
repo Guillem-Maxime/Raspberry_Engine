@@ -24,22 +24,17 @@ void VAOHandler::Unbind() const
 void VAOHandler::Compute() const
 {
 	m_Program.UseProgram();
-	for(const auto& vbo : m_VBOs)
-	{
-		vbo.Compute();
-	}
+	m_VBO.Compute();
 }
 
 void VAOHandler::Draw() const
 {
 	Bind();
-	for(const auto& vbo : m_VBOs)
-	{
-		vbo.Draw();
-	}
+	m_VBO.Draw();
+	Unbind();
 }
 
-void VAOHandler::AddVBO(VBOHandler& vbo)
+void VAOHandler::SetVBO(const VBOHandler& vbo)
 {
-	m_VBOs.push_back(vbo);
+	m_VBO = vbo;
 }

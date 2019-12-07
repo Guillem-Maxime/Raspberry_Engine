@@ -1,6 +1,6 @@
 #include "vertex.h"
 
-void Vertex1P1N1U::GetAttribPointerInfo(std::vector<AttribPointerInfo>& outAttribPointerInfos)
+void Vertex1P1N1U::GetAttribPointerInfos(std::vector<AttribPointerInfo>& outAttribPointerInfos)
 {
     outAttribPointerInfos.clear();
 	outAttribPointerInfos.reserve(3);
