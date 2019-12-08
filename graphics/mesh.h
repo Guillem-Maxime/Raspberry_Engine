@@ -10,7 +10,8 @@ public:
 	Mesh() = default;
 	virtual ~Mesh() = default;
 
-    GLuint GetSize() const;
+    GLuint GetNumberOfElements() const { return m_Vertices.size(); }
+    GLuint GetSizeOf() const;
     const Vertex1P1N1U* GetRaw() const;
     Vertex1P1N1U* GetRaw();
 	inline void SetVertices(const std::vector<Vertex1P1N1U>& vertices) { m_Vertices = vertices; }

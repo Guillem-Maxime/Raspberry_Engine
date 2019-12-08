@@ -53,7 +53,7 @@ void VBOHandler::Bind() const
 
 void VBOHandler::BufferData() const
 {
-	glBufferData(m_BufferType, m_Mesh.GetSize(), m_Mesh.GetRaw(), m_BufferUsage);
+	glBufferData(m_BufferType, m_Mesh.GetSizeOf(), m_Mesh.GetRaw(), m_BufferUsage);
 }
 
 void VBOHandler::AttribAndEnablePointer() const
@@ -73,6 +73,6 @@ void VBOHandler::Unbind() const
 void VBOHandler::Draw() const
 {
 	Bind();
-	glDrawArrays(m_DrawMode, 0, 3);
+	glDrawArrays(m_DrawMode, 0, m_Mesh.GetNumberOfElements());
 	Unbind();
 }

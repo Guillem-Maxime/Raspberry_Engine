@@ -1,6 +1,6 @@
 #include "mesh.h"
 
-GLuint Mesh::GetSize() const
+GLuint Mesh::GetSizeOf() const
 {
     return m_Vertices.size() * sizeof(Vertex1P1N1U);
 }
