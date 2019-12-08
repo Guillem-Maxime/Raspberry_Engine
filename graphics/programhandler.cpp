@@ -51,3 +51,39 @@ void ProgramHandler::UseProgram() const
 		std::cerr << "Program Not Initialized ID : " << m_ProgramId << std::endl;
 	}
 }
+
+void ProgramHandler::Uniform(const GLint location, const GLfloat myUniformVariable) const
+{
+    glUniform1f(location, myUniformVariable);
+}
+
+void ProgramHandler::Uniform(const GLint location, const GLint myUniformVariable) const
+{
+    glUniform1i(location, myUniformVariable);
+}
+
+void ProgramHandler::Uniform(const GLint location, const GLuint myUniformVariable) const
+{
+    glUniform1ui(location, myUniformVariable);
+}
+
+void ProgramHandler::Uniform(const GLint location, const glm::vec3& myUniformVariable) const
+{
+    glUniform1fv(location, 1, glm::value_ptr(myUniformVariable));
+}
+
+void ProgramHandler::Uniform(const GLint location, const glm::vec4& myUniformVariable) const
+{
+    glUniform1fv(location, 1, glm::value_ptr(myUniformVariable));
+}
+
+void ProgramHandler::Uniform(const GLint location, const glm::mat3& myUniformVariable) const
+{
+    glUniformMatrix3fv(location, 1, false, glm::value_ptr(myUniformVariable));
+}
+
+void ProgramHandler::Uniform(const GLint location, const glm::mat4& myUniformVariable) const
+{
+    glUniformMatrix4fv(location, 1, false, glm::value_ptr(myUniformVariable));
+}
+

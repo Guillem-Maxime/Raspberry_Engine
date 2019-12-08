@@ -28,6 +28,17 @@ int main(int argc, char** argv)
     ShaderHandler fragShader{ {fragmentShader, GL_FRAGMENT_SHADER} };
     ProgramHandler program({vertShader, fragShader}); 
 
+    glm::mat4 model{ glm::mat4(1.0f) };
+    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::mat4 view{ glm::mat4(1.0f) };
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
+    glm::mat4 projection{ glm::mat4(1.0f) };
+    projection = glm::perspective(glm::radians(45.0f), 1.33f, 0.1f, 100.0f);
+
+    glm::mat4 transform{ projection * view * model};
+
+    program.SetUniformVariable(transform, "mTransform");
+
     VAOHandler vao1(program);
 	VAOHandler vao2(program);
 
@@ -66,8 +77,11 @@ void InitTriangles(VAOHandler& vao1, VAOHandler& vao2)
 	firstVertices.reserve(3);
    	Vertex1P1N1U v1, v2, v3;
     v1.m_Position = {-0.90, -0.90, 0.00};
+    v1.m_Texture = {0.0, 0.0};
     v2.m_Position = { 0.85, -0.90, 0.00};
+    v2.m_Texture = {1.0, 0.0};
     v3.m_Position = {-0.90,  0.85, 0.00};
+    v3.m_Texture = {0.0, 1.0};
     firstVertices.push_back(v1);
     firstVertices.push_back(v2);
 	firstVertices.push_back(v3);
