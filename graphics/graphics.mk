@@ -39,6 +39,10 @@ TextureHandler.o: texturehandler.cpp
 	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
 	@echo "    	CXX        $@"
 
+Camera.o: camera.cpp
+	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
+	@echo "    	CXX        $@"
+
 ## Quand vous rajoutez un fichier, suivre le même format que ci dessous pour chaque fichier :
 ##Cible: dépendances
 ##	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
