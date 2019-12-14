@@ -20,4 +20,10 @@ void Camera::ResetToDefault()
 	m_ViewMatrix = glm::translate(m_ViewMatrix, glm::vec3(CAMERA_POSITION_X, CAMERA_POSITION_Y, CAMERA_POSITION_Z));
 	m_ProjectionMatrix = glm::mat4(1.0f);
 	m_ProjectionMatrix = glm::perspective(glm::radians(PROJECTION_ANGLE), SCREEN_RATIO, FRUSTRUM_BEGIN, FRUSTRUM_END);
+	UpdateProjView();
+}
+
+void Camera::UpdateProjView()
+{
+	m_ProjViewMatrix = m_ProjectionMatrix * m_ViewMatrix;
 }

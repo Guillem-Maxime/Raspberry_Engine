@@ -4,16 +4,22 @@
 
 #include "programhandler.h"
 #include "openglobjecthandler.h"
+#include "texturehandler.h"
 #include "vbohandler.h"
+
+struct VAOInfos
+{
+	ProgramHandler m_Program;
+	TextureHandler m_Texture;
+};
 
 class VAOHandler : public OpenGLObjectHandler
 {
 public:
 	explicit VAOHandler() = default;
-	explicit VAOHandler(const ProgramHandler& program);
 	virtual ~VAOHandler();
 
-	void Init(const ProgramHandler& program);
+	void Init(const VAOInfos& infos);
 	void Bind() const;
 	void Unbind() const;
 	void Compute() const;
@@ -26,5 +32,6 @@ protected:
 private:
 	GLuint m_VAOId{0};
 	ProgramHandler m_Program;
+	TextureHandler m_Texture;
 	VBOHandler m_VBO;
 };

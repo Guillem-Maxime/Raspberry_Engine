@@ -20,12 +20,11 @@ public:
 	void Init(const ShaderInfos& infos);
 	inline GLuint GetShaderId() const { return m_ShaderId; }
 
-	static const std::string ms_ShaderDirectory;
-
 protected:
 	virtual void GenerateGLObjectId() override;
 
 private:
+	static const std::string ms_ShaderDirectory;
 	ShaderInfos m_ShaderInfos{""};
 	GLuint m_ShaderId{0};
 	std::string m_ShaderSource{};

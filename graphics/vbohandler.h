@@ -10,16 +10,12 @@ struct VBOInitializer
 	GLenum m_BufferUsage{GL_STATIC_DRAW};
 	GLenum m_DrawMode{GL_TRIANGLES};
 	Mesh m_Mesh;
-
-	VBOInitializer(const Mesh& mesh) : m_Mesh(mesh) {}
-	VBOInitializer(const GLenum bufferType, const GLenum bufferUsage, const Mesh& mesh) : m_BufferType(bufferType), m_BufferUsage(bufferUsage), m_Mesh(mesh) {}
 };
 
 class VBOHandler : public OpenGLObjectHandler
 {
 public:
 	explicit VBOHandler() = default;
-	explicit VBOHandler(const VBOInitializer& initializer);
 	virtual ~VBOHandler();
 	
 	void Init(const VBOInitializer& initializer);
@@ -38,7 +34,8 @@ private:
 	GLenum m_BufferType;
 	GLenum m_BufferUsage;
 	GLenum m_DrawMode;
-	
+
+	void AttribAndEnablePointer() const;	
 	void BufferData() const;
-	void AttribAndEnablePointer() const;
+	std::string GetBufferTypeStr() const;
 };
