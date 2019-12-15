@@ -12,7 +12,7 @@ out vec2 textureCoord;
 
 void main()
 {
-	gl_Position = mProjView * mModel * vec4(vPosition, 0.0f);
+	gl_Position = mProjView * mModel * vec4(vPosition, 1.0f);
 	normal = vNormal;
 	textureCoord = vTexture;
 }

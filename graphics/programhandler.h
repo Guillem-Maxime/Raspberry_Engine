@@ -5,16 +5,25 @@
 #include "openglobjecthandler.h"
 #include "shaderhandler.h"
 
+class TextureHandler;
+
+struct ProgramInitializer
+{
+	std::vector<ShaderInfos> m_ShaderInfos;
+};
+
 class ProgramHandler : OpenGLObjectHandler
 {
 public:
 	explicit ProgramHandler() = default;
-	explicit ProgramHandler(const std::vector<ShaderHandler>& shaders);
-	~ProgramHandler();
+	~ProgramHandler() = default;
 
-	void Init(const std::vector<ShaderHandler>& shaders);
-	void LinkProgram() const;
-	void UseProgram() const;
+	void Init(const ProgramInitializer& init);
+	void Delete();
+	void Link();
+	void Use() const;
+
+	void AddTexture(TextureHandler* texture);
 
     template<class T>
     void SetUniformVariable(const T& myUniformVariable, const char* nameInShader) const; 
@@ -22,7 +31,12 @@ protected:
 	virtual void GenerateGLObjectId() override;
 
 private:
-	GLuint m_ProgramId;
+	std::vector<ShaderHandler> m_Shaders{};
+	std::vector<TextureHandler*> m_Textures{};
+	GLuint m_ProgramId{0};
+	
+	void CompileShaders() const;
+	void DeleteShaders();
 
     void Uniform(GLint location, GLfloat myUniformVariable)  const;
     void Uniform(GLint location, GLint myUniformVariable) const;
@@ -37,6 +51,6 @@ template<class T>
 void ProgramHandler::SetUniformVariable(const T& myUniformVariable, const char* nameInShader) const
 {
     GLint location{ glGetUniformLocation(m_ProgramId, nameInShader) };
-    UseProgram();
+    Use();
     Uniform(location, myUniformVariable);
 }

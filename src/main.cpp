@@ -20,30 +20,33 @@ std::string fragmentShader = "frag.glsl";
 std::string testTextureFile = "xmen.png";
 
 void InitOpenGL();
-void InitTriangles(VAOHandler& vao1, VAOHandler& vao2);
+void InitTriangles(VAOInitializer& vao1, VAOInitializer& vao2);
 
 int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
 	InitOpenGL();
 
-    ShaderHandler vertShader{ {vertexShader, GL_VERTEX_SHADER} };
-    ShaderHandler fragShader{ {fragmentShader, GL_FRAGMENT_SHADER} };
-    ProgramHandler program({vertShader, fragShader}); 
+    ShaderInfos vertShaderInfos;
+   	vertShaderInfos.m_ShaderName = vertexShader;
+	vertShaderInfos.m_ShaderType = GL_VERTEX_SHADER;
+    ShaderInfos fragShaderInfos;
+   	fragShaderInfos.m_ShaderName = fragmentShader;
+	fragShaderInfos.m_ShaderType = GL_FRAGMENT_SHADER;
+    
+	ProgramInitializer programInit;
+   	programInit.m_ShaderInfos.reserve(2);
+	programInit.m_ShaderInfos.push_back(vertShaderInfos);
+	programInit.m_ShaderInfos.push_back(fragShaderInfos); 
 
 	TextureInfos textureInfos;
 	textureInfos.m_TextureFile = testTextureFile;
 	textureInfos.m_TextureType = GL_TEXTURE_2D;
-	TextureHandler textureHandler;
-	textureHandler.Init(textureInfos);
-
-	VAOInfos vaoInfos;
-	vaoInfos.m_Program = program;
-	vaoInfos.m_Texture = textureHandler;
-
-    glm::mat4 model{ glm::mat4(1.0f) };
+    
+	glm::mat4 model{ glm::mat4(1.0f) };
     model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  	Camera camera;
+  	
+	Camera camera;
 	camera.Init();
 	/*
   	glm::mat4 view{ glm::mat4(1.0f) };
@@ -51,31 +54,87 @@ int main(int argc, char** argv)
     glm::mat4 projection{ glm::mat4(1.0f) };
     projection = glm::perspective(glm::radians(45.0f), 1.33f, 0.1f, 100.0f);
 */
-    glm::mat4 projView{ camera.GetProjViewMatrix()};
+    //glm::mat4 projView{ camera.GetProjViewMatrix()};
 
-    program.SetUniformVariable(projView, "mProjView");
-	program.SetUniformVariable(model, "mModel");
+    //program.SetUniformVariable(projView, "mProjView");
+	//program.SetUniformVariable(model, "mModel");
 
-    VAOHandler vao1;
-	vao1.Init(vaoInfos);
+	VAOInitializer vaoInit1, vaoInit2;
+	vaoInit1.m_ProgramInitializer = programInit;
+	vaoInit1.m_TextureInfos = textureInfos;
+	vaoInit1.m_Camera = &camera;
+
+	vaoInit2.m_ProgramInitializer = programInit;
+	vaoInit2.m_TextureInfos = textureInfos;
+	vaoInit2.m_Camera = &camera;
+
+    InitTriangles(vaoInit1, vaoInit2);
+
+	VAOHandler vao1;
+	vao1.Init(vaoInit1);
+	vao1.Prepare();
+	vao1.AddModelTransform(model);
+
 	VAOHandler vao2;
-	vao2.Init(vaoInfos);
+	vao2.Init(vaoInit2);
+	vao2.Prepare();
+	vao2.AddModelTransform(model);
 
-    InitTriangles(vao1, vao2);
+    ShaderInfos simpleVertShaderInfos;
+   	simpleVertShaderInfos.m_ShaderName = "simplevert.glsl";
+	simpleVertShaderInfos.m_ShaderType = GL_VERTEX_SHADER;
+    ShaderInfos simpleFragShaderInfos;
+   	simpleFragShaderInfos.m_ShaderName = "simplefrag.glsl";
+	simpleFragShaderInfos.m_ShaderType = GL_FRAGMENT_SHADER;
+	
+	ProgramInitializer simpleProgramInit;
+    simpleProgramInit.m_ShaderInfos.push_back(simpleVertShaderInfos);
+	simpleProgramInit.m_ShaderInfos.push_back(simpleFragShaderInfos);
+	
+	std::vector<Vertex1P1N1U> vertices{};
+	vertices.reserve(3);
+   	Vertex1P1N1U v1, v2, v3;
+    v1.m_Position = {-0.5, -0.5, 0.00};
+//    v1.m_Texture = {0.0, 0.0};
+    v2.m_Position = { 0.5, -0.5, 0.00};
+//    v2.m_Texture = {1.0, 0.0};
+    v3.m_Position = { 0.0,  0.5, 0.00};
+//    v3.m_Texture = {0.0, 1.0};
+    vertices.push_back(v1);
+    vertices.push_back(v2);
+	vertices.push_back(v3);
+	Mesh mesh;
+	mesh.SetVertices(vertices);
+
+	VBOInfos vboInfos;
+	vboInfos.m_Mesh = mesh;
+	VBOHandler vbo;
+	vbo.Init(vboInfos);
+
+	VAOInitializer vao3Init;
+	vao3Init.m_ProgramInitializer = simpleProgramInit;
+	vao3Init.m_VBOInfos = vboInfos;
+	vao3Init.m_TextureInfos = textureInfos;
+	vao3Init.m_Camera = &camera;
+
+	VAOHandler vao3;
+	vao3.Init(vao3Init);
+	vao3.Prepare();
+	vao3.Unbind();
 
 	std::cout << "Drawing Loop" << std::endl;
 	int frameCount{0};
-    while(frameCount < 5)
-    {
+    //while(frameCount < 3)
+    while(1)
+	{
 		glClear(GL_COLOR_BUFFER_BIT);
 		GLUtils::GetGLError("glClear");
-		std::cout << "draw vao1" << std::endl;
-		vao1.Draw();
-		std::cout << "draw vao2" << std::endl;
+		vao1.Draw();	
 		vao2.Draw();
-		std::cout << "glFlush" << std::endl;
+		vao3.Draw();
 		glFlush();
 		GLUtils::GetGLError("glFlush");
+		glutSwapBuffers();
 		frameCount++;
     }
 
@@ -96,34 +155,25 @@ void InitOpenGL()
     }
 }
 
-void InitTriangles(VAOHandler& vao1, VAOHandler& vao2)
-{
-    vao1.Bind();
-    	
+void InitTriangles(VAOInitializer& vaoInit1, VAOInitializer& vaoInit2)
+{ 	
 	std::vector<Vertex1P1N1U> firstVertices{};
 	firstVertices.reserve(3);
    	Vertex1P1N1U v1, v2, v3;
     v1.m_Position = {-0.90, -0.90, 0.00};
-    v1.m_Texture = {0.0, 0.0};
+//    v1.m_Texture = {0.0, 0.0};
     v2.m_Position = { 0.85, -0.90, 0.00};
-    v2.m_Texture = {1.0, 0.0};
+//    v2.m_Texture = {1.0, 0.0};
     v3.m_Position = {-0.90,  0.85, 0.00};
-    v3.m_Texture = {0.0, 1.0};
+//    v3.m_Texture = {0.0, 1.0};
     firstVertices.push_back(v1);
     firstVertices.push_back(v2);
 	firstVertices.push_back(v3);
 	Mesh firstMesh;
 	firstMesh.SetVertices(firstVertices);
-	VBOInitializer firstVBOInit;
-	firstVBOInit.m_Mesh = firstMesh;
-	VBOHandler firstVBO;
-	firstVBO.Init(firstVBOInit);
-    
-	vao1.SetVBO(firstVBO);
-	vao1.Compute();
-    vao1.Unbind();
- 
-	vao2.Bind();
+	VBOInfos firstVBOInfos;
+	firstVBOInfos.m_Mesh = firstMesh;
+	vaoInit1.m_VBOInfos = firstVBOInfos;
 
 	std::vector<Vertex1P1N1U> secondVertices{};
 	secondVertices.reserve(3);
@@ -139,13 +189,7 @@ void InitTriangles(VAOHandler& vao1, VAOHandler& vao2)
 	secondVertices.push_back(v6);
 	Mesh secondMesh;
 	secondMesh.SetVertices(secondVertices);
-	VBOInitializer secondVBOInit;
-	secondVBOInit.m_Mesh = secondMesh;
-	VBOHandler secondVBO;
-	secondVBO.Init(secondVBOInit);
-    
-	vao2.SetVBO(secondVBO);
-	vao2.Compute();
-	vao2.Unbind();
-    
+	VBOInfos secondVBOInfos;
+	secondVBOInfos.m_Mesh = secondMesh;
+   	vaoInit2.m_VBOInfos = secondVBOInfos;	   
 }

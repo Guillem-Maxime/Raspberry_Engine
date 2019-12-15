@@ -11,14 +11,18 @@ void TextureHandler::Init(const TextureInfos& infos)
 	SetTextureType(infos.m_TextureType);
 	SetTextureWrapType(infos.m_TextureWrapType);
 	SetTextureFilteringType(infos.m_TextureFilteringType);
-	Reset();
 }
 
-void TextureHandler::Reset() const
+void TextureHandler::Prepare() const
 {
 	Bind();
 	ApplyParameters();
 	LoadAndGenerateTexture();
+}
+
+void TextureHandler::Delete() const
+{
+	glDeleteTextures(1, &m_TextureId);
 }
 
 void TextureHandler::GenerateGLObjectId()
@@ -78,12 +82,6 @@ void TextureHandler::LoadAndGenerateTexture() const
 		std::cerr << "ERROR::LOADING::TEXTURE::FILE : " << m_File << std::endl;
 	}
 	stbi_image_free(data);	
-}
-
-void TextureHandler::UseTexture(const GLuint textureNbr) const
-{
-	glActiveTexture(GL_TEXTURE0 + textureNbr);
-	Bind();
 }
 
 std::string TextureHandler::GetTextureTypeStr() const

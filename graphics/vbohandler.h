@@ -4,32 +4,33 @@
 #include "mesh.h"
 #include "openglobjecthandler.h"
 
-struct VBOInitializer
+struct VBOInfos
 {
+	Mesh m_Mesh;
 	GLenum m_BufferType{GL_ARRAY_BUFFER};
 	GLenum m_BufferUsage{GL_STATIC_DRAW};
 	GLenum m_DrawMode{GL_TRIANGLES};
-	Mesh m_Mesh;
 };
 
 class VBOHandler : public OpenGLObjectHandler
 {
 public:
 	explicit VBOHandler() = default;
-	virtual ~VBOHandler();
+	virtual ~VBOHandler() = default;
 	
-	void Init(const VBOInitializer& initializer);
+	void Init(const VBOInfos& infos);
+	void Delete() const;
 	void Bind() const;
 	void Unbind() const;
-	void Compute() const;
+	void Prepare() const;
 	void Draw() const;
 
 protected:
 	virtual void GenerateGLObjectId() override;
 
 private:
-	std::vector<AttribPointerInfo> m_AttribPointerInfos;
     Mesh m_Mesh;
+	std::vector<AttribPointerInfo> m_AttribPointerInfos;
 	GLuint m_BufferId{0};
 	GLenum m_BufferType;
 	GLenum m_BufferUsage;

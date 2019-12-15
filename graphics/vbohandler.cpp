@@ -2,14 +2,20 @@
 
 #include "glutils.h"
 
-void VBOHandler::Init(const VBOInitializer& initializer)
+void VBOHandler::Init(const VBOInfos& infos)
 {
 	InitInternal();
-	m_Mesh = initializer.m_Mesh;
-	m_BufferType = initializer.m_BufferType;
-	m_BufferUsage = initializer.m_BufferUsage;
-	m_DrawMode = initializer.m_DrawMode;
+	m_Mesh = infos.m_Mesh;
+	m_BufferType = infos.m_BufferType;
+	m_BufferUsage = infos.m_BufferUsage;
+	m_DrawMode = infos.m_DrawMode;
 	Vertex1P1N1U::GetAttribPointerInfos(m_AttribPointerInfos);
+}
+
+void VBOHandler::Delete() const
+{
+	std::cout << "Deleting Buffer : " << GetBufferTypeStr() << " : " << m_BufferId << std::endl;
+	glDeleteBuffers(1, &m_BufferId);
 }
 
 void VBOHandler::GenerateGLObjectId()
@@ -18,12 +24,7 @@ void VBOHandler::GenerateGLObjectId()
 	GLUtils::GetGLError("VBOGenBuffer");
 }
 
-VBOHandler::~VBOHandler()
-{
-	glDeleteBuffers(1, &m_BufferId);
-}
-
-void VBOHandler::Compute() const
+void VBOHandler::Prepare() const
 {
 	Bind();
 	if(IsInitialized())
@@ -81,8 +82,6 @@ void VBOHandler::Unbind() const
 
 void VBOHandler::Draw() const
 {
-	Bind();
-	GLUtils::GetGLError("VBODraw_Bind");
 	glDrawArrays(m_DrawMode, 0, m_Mesh.GetNumberOfElements());
 	GLUtils::GetGLError("VBODraw_Draw");
 }

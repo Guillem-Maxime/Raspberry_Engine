@@ -1,12 +1,20 @@
 #include "vaohandler.h"
 
+#include "camera.h"
 #include "glutils.h"
 
-void VAOHandler::Init(const VAOInfos& infos)
+void VAOHandler::Init(const VAOInitializer& initializer)
 {
 	InitInternal();
-	m_Program = infos.m_Program;
-	m_Texture = infos.m_Texture;
+	m_Program.Init(initializer.m_ProgramInitializer);
+	Bind();
+	m_Texture.Init(initializer.m_TextureInfos);
+	m_VBO.Init(initializer.m_VBOInfos);
+	m_Camera = initializer.m_Camera;
+	if(m_Camera == nullptr)
+	{
+		std::cerr << "ERROR::CAMERA::MISSING::VAO::" << m_VAOId << std::endl;
+	}
 }
 
 void VAOHandler::GenerateGLObjectId()
@@ -14,8 +22,11 @@ void VAOHandler::GenerateGLObjectId()
 	glGenVertexArrays(1, &m_VAOId); 
 }
 
-VAOHandler::~VAOHandler()
+void VAOHandler::Delete()
 {
+	m_Texture.Delete();
+	m_Program.Delete();
+	m_VBO.Delete();
 	glDeleteVertexArrays(1, &m_VAOId);
 }
 
@@ -37,6 +48,7 @@ void VAOHandler::Bind() const
 
 void VAOHandler::Unbind() const
 {
+	m_VBO.Unbind();
 	glBindVertexArray(0);
 	if(GLUtils::GetGLError("VAOBind"))
 	{
@@ -44,27 +56,27 @@ void VAOHandler::Unbind() const
 	}
 }
 
-void VAOHandler::Compute() const
+void VAOHandler::Prepare()
 {
-	m_Program.UseProgram();
-	m_VBO.Compute();
-	m_Texture.Reset();
-	m_Texture.UseTexture(0);
+	m_Program.Link();
+	Bind();
+	m_VBO.Prepare();
+	m_Texture.Prepare();
+	m_Program.AddTexture(&m_Texture);
 }
 
 void VAOHandler::Draw() const
-{
-	m_Texture.UseTexture(0);
-	GLUtils::GetGLError("Draw_UseTexture");
-	m_Program.UseProgram();
-	GLUtils::GetGLError("Draw_UseProgram");
-	Bind();
-	GLUtils::GetGLError("Draw_Bind");
-	m_VBO.Draw();
-	GLUtils::GetGLError("Draw_VBO");
-}
-
-void VAOHandler::SetVBO(const VBOHandler& vbo)
-{
-	m_VBO = vbo;
+{	
+	m_Program.SetUniformVariable(m_Camera->GetProjViewMatrix(), "mProjView");
+	for(const glm::mat4& modelTransform : m_ModelTransforms)
+	{
+		m_Program.SetUniformVariable(modelTransform, "mModel");
+	
+		m_Program.Use();
+		GLUtils::GetGLError("Draw_UseProgram");
+		Bind();
+		GLUtils::GetGLError("Draw_Bind");
+		m_VBO.Draw();
+		GLUtils::GetGLError("Draw_VBO");
+	}
 }

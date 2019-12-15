@@ -6,18 +6,20 @@
 
 struct ShaderInfos
 {
-    std::string shaderName{""};
-    GLenum shaderType{GL_NONE};
+    std::string m_ShaderName{""};
+    GLenum m_ShaderType{GL_NONE};
 };
 
 class ShaderHandler : public OpenGLObjectHandler
 {
 public:
 	explicit ShaderHandler() = default;
-	explicit ShaderHandler(const ShaderInfos& infos);
-	virtual ~ShaderHandler();
+	virtual ~ShaderHandler() = default;
 
-	void Init(const ShaderInfos& infos);
+	void Init(const ShaderInfos& init);
+	void Delete() const;
+
+	void Compile() const;
 	inline GLuint GetShaderId() const { return m_ShaderId; }
 
 protected:
@@ -25,9 +27,10 @@ protected:
 
 private:
 	static const std::string ms_ShaderDirectory;
-	ShaderInfos m_ShaderInfos{""};
+	std::string m_ShaderName{""};
+	std::string m_ShaderSource{""};
+	GLenum m_ShaderType{GL_NONE};
 	GLuint m_ShaderId{0};
-	std::string m_ShaderSource{};
 
 	void ReadShaderSource();
 	void CheckShaderCompilation() const;

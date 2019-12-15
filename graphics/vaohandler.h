@@ -7,31 +7,43 @@
 #include "texturehandler.h"
 #include "vbohandler.h"
 
-struct VAOInfos
+class Camera;
+
+struct VAOInitializer
 {
-	ProgramHandler m_Program;
-	TextureHandler m_Texture;
+	ProgramInitializer m_ProgramInitializer;
+	TextureInfos m_TextureInfos;
+	VBOInfos m_VBOInfos;
+	Camera* m_Camera{nullptr};
 };
 
 class VAOHandler : public OpenGLObjectHandler
 {
 public:
 	explicit VAOHandler() = default;
-	virtual ~VAOHandler();
+	virtual ~VAOHandler() = default;
 
-	void Init(const VAOInfos& infos);
+	void Init(const VAOInitializer& initializer);
+	void Delete();
 	void Bind() const;
 	void Unbind() const;
-	void Compute() const;
+	void Prepare();
 	void Draw() const;
-	void SetVBO(const VBOHandler& vbo);
+
+	const ProgramHandler& GetProgram() const { return m_Program; } 
+	ProgramHandler& GetProgram() { return m_Program; }
+	const VBOHandler& GetVBO() const { return m_VBO; }
+	VBOHandler& GetVBO() { return m_VBO; }
+	void AddModelTransform(const glm::mat4& value) { m_ModelTransforms.push_back(value); }
 
 protected:
 	virtual void GenerateGLObjectId() override;
 
 private:
-	GLuint m_VAOId{0};
 	ProgramHandler m_Program;
 	TextureHandler m_Texture;
 	VBOHandler m_VBO;
+	std::vector<glm::mat4> m_ModelTransforms{};
+	Camera* m_Camera;
+	GLuint m_VAOId{0};
 };
