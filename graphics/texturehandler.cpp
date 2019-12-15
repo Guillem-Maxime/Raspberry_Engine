@@ -70,6 +70,7 @@ void TextureHandler::LoadAndGenerateTexture() const
 	int height{0};
 	int nbrChannels{0};
 	const char* filename{ m_File.c_str() };
+	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data{ stbi_load(filename, &width, &height, &nbrChannels, 0) };
 	if(data != nullptr)
 	{

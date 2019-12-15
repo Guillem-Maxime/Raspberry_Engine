@@ -17,7 +17,7 @@
 
 std::string vertexShader = "vert.glsl";
 std::string fragmentShader = "frag.glsl";
-std::string testTextureFile = "xmen.png";
+std::string testTextureFile = "testtexture.jpg";
 
 void InitOpenGL();
 void InitTriangles(VAOInitializer& vao1, VAOInitializer& vao2);
@@ -48,16 +48,6 @@ int main(int argc, char** argv)
   	
 	Camera camera;
 	camera.Init();
-	/*
-  	glm::mat4 view{ glm::mat4(1.0f) };
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
-    glm::mat4 projection{ glm::mat4(1.0f) };
-    projection = glm::perspective(glm::radians(45.0f), 1.33f, 0.1f, 100.0f);
-*/
-    //glm::mat4 projView{ camera.GetProjViewMatrix()};
-
-    //program.SetUniformVariable(projView, "mProjView");
-	//program.SetUniformVariable(model, "mModel");
 
 	VAOInitializer vaoInit1, vaoInit2;
 	vaoInit1.m_ProgramInitializer = programInit;
@@ -95,11 +85,11 @@ int main(int argc, char** argv)
 	vertices.reserve(3);
    	Vertex1P1N1U v1, v2, v3;
     v1.m_Position = {-0.5, -0.5, 0.00};
-//    v1.m_Texture = {0.0, 0.0};
+    v1.m_Texture = {0.0, 0.0};
     v2.m_Position = { 0.5, -0.5, 0.00};
-//    v2.m_Texture = {1.0, 0.0};
+    v2.m_Texture = {1.0, 0.0};
     v3.m_Position = { 0.0,  0.5, 0.00};
-//    v3.m_Texture = {0.0, 1.0};
+    v3.m_Texture = {0.0, 1.0};
     vertices.push_back(v1);
     vertices.push_back(v2);
 	vertices.push_back(v3);
@@ -161,11 +151,11 @@ void InitTriangles(VAOInitializer& vaoInit1, VAOInitializer& vaoInit2)
 	firstVertices.reserve(3);
    	Vertex1P1N1U v1, v2, v3;
     v1.m_Position = {-0.90, -0.90, 0.00};
-//    v1.m_Texture = {0.0, 0.0};
+    v1.m_Texture = {0.0, 0.0};
     v2.m_Position = { 0.85, -0.90, 0.00};
-//    v2.m_Texture = {1.0, 0.0};
+    v2.m_Texture = {1.0, 0.0};
     v3.m_Position = {-0.90,  0.85, 0.00};
-//    v3.m_Texture = {0.0, 1.0};
+    v3.m_Texture = {0.0, 1.0};
     firstVertices.push_back(v1);
     firstVertices.push_back(v2);
 	firstVertices.push_back(v3);
