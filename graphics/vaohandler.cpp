@@ -10,6 +10,7 @@ void VAOHandler::Init(const VAOInitializer& initializer)
 	Bind();
 	m_Texture.Init(initializer.m_TextureInfos);
 	m_VBO.Init(initializer.m_VBOInfos);
+	m_EBO.Init(initializer.m_EBOInfos);
 	m_Camera = initializer.m_Camera;
 	if(m_Camera == nullptr)
 	{
@@ -27,6 +28,7 @@ void VAOHandler::Delete()
 	m_Texture.Delete();
 	m_Program.Delete();
 	m_VBO.Delete();
+	m_EBO.Delete();
 	glDeleteVertexArrays(1, &m_VAOId);
 }
 
@@ -48,6 +50,7 @@ void VAOHandler::Bind() const
 
 void VAOHandler::Unbind() const
 {
+	m_EBO.Unbind();
 	m_VBO.Unbind();
 	glBindVertexArray(0);
 	if(GLUtils::GetGLError("VAOBind"))
@@ -61,6 +64,7 @@ void VAOHandler::Prepare()
 	m_Program.Link();
 	Bind();
 	m_VBO.Prepare();
+	m_EBO.Prepare();
 	m_Texture.Prepare();
 	m_Program.AddTexture(&m_Texture);
 }
@@ -76,7 +80,7 @@ void VAOHandler::Draw() const
 		GLUtils::GetGLError("Draw_UseProgram");
 		Bind();
 		GLUtils::GetGLError("Draw_Bind");
-		m_VBO.Draw();
+		m_EBO.Draw();
 		GLUtils::GetGLError("Draw_VBO");
 	}
 }

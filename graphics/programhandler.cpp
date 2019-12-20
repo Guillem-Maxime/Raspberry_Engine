@@ -81,7 +81,7 @@ void ProgramHandler::CompileShaders() const
 void ProgramHandler::AddTexture(TextureHandler* texture)
 {
 	m_Textures.push_back(texture);
-	GLint textureId = m_Textures.size() - 1;
+	GLint textureId = static_cast<GLint>(m_Textures.size()) - 1;
 	std::string textureName = "texture" + std::to_string(textureId);
 	SetUniformVariable(textureId, textureName.c_str());
 }

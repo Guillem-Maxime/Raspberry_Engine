@@ -15,9 +15,9 @@
 #include "graphics/vbohandler.h"
 #include "graphics/vaohandler.h"
 
-std::string vertexShader = "vert.glsl";
-std::string fragmentShader = "frag.glsl";
-std::string testTextureFile = "testtexture.jpg";
+static std::string vertexShader = "vert.glsl";
+static std::string fragmentShader = "frag.glsl";
+static std::string testTextureFile = "xmen.png";
 
 void InitOpenGL();
 void InitTriangles(VAOInitializer& vao1, VAOInitializer& vao2);
@@ -120,8 +120,8 @@ int main(int argc, char** argv)
 		glClear(GL_COLOR_BUFFER_BIT);
 		GLUtils::GetGLError("glClear");
 		vao1.Draw();	
-		vao2.Draw();
-		vao3.Draw();
+		//vao2.Draw();
+		//vao3.Draw();
 		glFlush();
 		GLUtils::GetGLError("glFlush");
 		glutSwapBuffers();
@@ -143,27 +143,45 @@ void InitOpenGL()
     {
         std::cerr << "Unable to Initialize glew" << std::endl;
     }
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void InitTriangles(VAOInitializer& vaoInit1, VAOInitializer& vaoInit2)
 { 	
 	std::vector<Vertex1P1N1U> firstVertices{};
 	firstVertices.reserve(3);
-   	Vertex1P1N1U v1, v2, v3;
-    v1.m_Position = {-0.90, -0.90, 0.00};
-    v1.m_Texture = {0.0, 0.0};
-    v2.m_Position = { 0.85, -0.90, 0.00};
-    v2.m_Texture = {1.0, 0.0};
-    v3.m_Position = {-0.90,  0.85, 0.00};
-    v3.m_Texture = {0.0, 1.0};
-    firstVertices.push_back(v1);
-    firstVertices.push_back(v2);
-	firstVertices.push_back(v3);
+   	Vertex1P1N1U v11, v12, v13, v14;
+    v11.m_Position = {-0.90, -0.90, 0.00};
+    v11.m_Texture = {0.0, 0.0};
+    v12.m_Position = { 0.90, -0.90, 0.00};
+    v12.m_Texture = {1.0, 0.0};
+    v13.m_Position = { 0.90,  0.90, 0.00};
+    v13.m_Texture = {1.0, 1.0};
+    v14.m_Position = {-0.90,  0.90, 0.00};
+    v14.m_Texture = {0.0, 1.0};
+    firstVertices.push_back(v11);
+    firstVertices.push_back(v12);
+	firstVertices.push_back(v13);
+	firstVertices.push_back(v14);
+	std::vector<GLuint> indices;
+	indices.reserve(6);
+	indices.push_back(0);
+	indices.push_back(1);
+	indices.push_back(3);
+	indices.push_back(1);
+	indices.push_back(2);
+	indices.push_back(3);
 	Mesh firstMesh;
 	firstMesh.SetVertices(firstVertices);
+	firstMesh.SetIndices(indices);
 	VBOInfos firstVBOInfos;
 	firstVBOInfos.m_Mesh = firstMesh;
+	EBOInfos firstEBOInfos;
+	firstEBOInfos.m_Indices = indices;
 	vaoInit1.m_VBOInfos = firstVBOInfos;
+	vaoInit1.m_EBOInfos = firstEBOInfos;
 
 	std::vector<Vertex1P1N1U> secondVertices{};
 	secondVertices.reserve(3);

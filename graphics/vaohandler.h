@@ -2,6 +2,7 @@
 
 #include "graphicsheader.h"
 
+#include "ebohandler.h"
 #include "programhandler.h"
 #include "openglobjecthandler.h"
 #include "texturehandler.h"
@@ -11,6 +12,7 @@ class Camera;
 
 struct VAOInitializer
 {
+	EBOInfos m_EBOInfos;
 	ProgramInitializer m_ProgramInitializer;
 	TextureInfos m_TextureInfos;
 	VBOInfos m_VBOInfos;
@@ -43,6 +45,7 @@ private:
 	ProgramHandler m_Program;
 	TextureHandler m_Texture;
 	VBOHandler m_VBO;
+	EBOHandler m_EBO;
 	std::vector<glm::mat4> m_ModelTransforms{};
 	Camera* m_Camera;
 	GLuint m_VAOId{0};

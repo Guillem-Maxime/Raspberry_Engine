@@ -57,10 +57,11 @@ void TextureHandler::Unbind() const
 
 void TextureHandler::ApplyParameters() const
 {
-	glTexParameteri(m_TextureType, GL_TEXTURE_WRAP_S, m_TextureWrapType);
-	glTexParameteri(m_TextureType, GL_TEXTURE_WRAP_T, m_TextureWrapType);
-	glTexParameteri(m_TextureType, GL_TEXTURE_MIN_FILTER, m_TextureFilteringType);
-	glTexParameteri(m_TextureType, GL_TEXTURE_MAG_FILTER, m_TextureFilteringType);
+	glTexParameteri(m_TextureType, GL_TEXTURE_WRAP_S, static_cast<GLint>(m_TextureWrapType) );
+	glTexParameteri(m_TextureType, GL_TEXTURE_WRAP_T, static_cast<GLint>(m_TextureWrapType) );
+	glTexParameteri(m_TextureType, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(m_TextureFilteringType) );
+	glTexParameteri(m_TextureType, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(m_TextureFilteringType) );
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	GLUtils::GetGLError("ApplyParameters");
 }
 
@@ -74,7 +75,7 @@ void TextureHandler::LoadAndGenerateTexture() const
 	unsigned char* data{ stbi_load(filename, &width, &height, &nbrChannels, 0) };
 	if(data != nullptr)
 	{
-		glTexImage2D(m_TextureType, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(m_TextureType, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(m_TextureType);
 		GLUtils::GetGLError("LoadAndGenerateTexture");
 	}

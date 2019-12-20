@@ -12,10 +12,10 @@ EXT_DIR			:= $(MAKE_DIR)/ext
 INCLUDE := $(MAKE_DIR)/
 
 CXX = clang++
-
 EXEC = Rasp_Earth_Display.exe
 DEBUG = yes
-CXXFLAGS = -std=c++17 -W -Wall -pedantic -fPIC -I$(INCLUDE)
+CXXFLAGS = -I$(INCLUDE) -std=c++17 -W -pedantic -fPIC
+WARNINGFLAGS = -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-inconsistent-missing-destructor-override -Wno-exit-time-destructors -Wno-global-constructors -Wno-weak-vtables
 ifeq ($(DEBUG),yes)
 CXXFLAGS := $(CXXFLAGS) -g
 endif
@@ -23,13 +23,13 @@ endif
 LIBS := -lGL -lglut -lGLEW
 
 
-export MAKE_DIR CXX CXXFLAGS LIBS INCLUDE EXEC OBJ_DIR
+export MAKE_DIR CXX CXXFLAGS WARNINGFLAGS LIBS INCLUDE EXEC OBJ_DIR
 
 all:
 ##  @$(MAKE) -C $(ENGINE_DIR)   -f makefile_engine.mk
+	@$(MAKE) -C $(EXT_DIR)    		-f ext.mk
 	@$(MAKE) -C $(GRAPHICS_DIR) 	-f graphics.mk
 	@$(MAKE) -C $(UTILS_DIR)    	-f utils.mk
-	@$(MAKE) -C $(EXT_DIR)    		-f ext.mk
 
 	@$(MAKE) -C $(SRC_DIR) 			-f rasp_earth_display.mk
 

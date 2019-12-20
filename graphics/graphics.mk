@@ -3,6 +3,8 @@ OBJ = $(SRC:.cpp=.o)
 
 INCLUDE_DIR =  
 
+CXXFLAGS := $(CXXFLAGS) $(WARNINGFLAGS) -Wno-old-style-cast
+
 TARGET = graphics.so
 
 $(TARGET): $(OBJ)
@@ -11,12 +13,36 @@ $(TARGET): $(OBJ)
 	@mv $(TARGET) $(OBJ_DIR)/
 	@echo "    	$(TARGET) move to $(OBJ_DIR)"
 
-Shader.o: shaderhandler.cpp
+Camera.o: camera.cpp
+	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
+	@echo "    	CXX       $@"
+
+EBOHandler.o: ebohandler.cpp
+	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
+	@echo "    	CXX        $@"
+
+GLUtils.o: glutils.cpp
+	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
+	@echo "    	CXX        $@"
+
+Mesh.o: mesh.cpp
+	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
+	@echo "    	CXX        $@"
+
+OpenGLObjectHandler.o: openglobjecthandler.cpp
 	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
 	@echo "    	CXX        $@"
 
 Program.o: programhandler.cpp
 	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
+	@echo "    	CXX        $@"
+
+Shader.o: shaderhandler.cpp
+	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
+	@echo "    	CXX        $@"
+
+TextureHandler.o: texturehandler.cpp
+	@$(CXX) $(CXXFLAGS) -Wno-sign-conversion $(INCLUDE_DIR) -o $@ -c $^
 	@echo "    	CXX        $@"
 
 VAOHandler.o: vaohandler.cpp
@@ -27,23 +53,7 @@ VBOhandler.o: vbohandler.cpp
 	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
 	@echo "    	CXX        $@"
 
-Mesh.o: mesh.cpp
-	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
-	@echo "    	CXX        $@"
-
 Vertex.o: vertex.cpp
-	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
-	@echo "    	CXX        $@"
-
-TextureHandler.o: texturehandler.cpp
-	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
-	@echo "    	CXX        $@"
-
-Camera.o: camera.cpp
-	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
-	@echo "    	CXX        $@"
-
-GLUtils.o: glutils.cpp
 	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIR) -o $@ -c $^
 	@echo "    	CXX        $@"
 

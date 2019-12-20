@@ -5,4 +5,4 @@
 namespace GLUtils
 {
 	bool GetGLError(const std::string& log);
-};
+}

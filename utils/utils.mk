@@ -3,6 +3,8 @@ OBJ = $(SRC:.cpp=.o)
 
 INCLUDE_DIR = 
 
+CXXFLAGS := $(CXXFLAGS) $(WARNINGFLAGS)
+
 TARGET = utils.so
 
 $(TARGET): $(OBJ)
