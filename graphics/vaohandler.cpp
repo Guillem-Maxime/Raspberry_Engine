@@ -23,12 +23,12 @@ void VAOHandler::GenerateGLObjectId()
 	glGenVertexArrays(1, &m_VAOId); 
 }
 
-void VAOHandler::Delete()
+void VAOHandler::Shutdown()
 {
-	m_Texture.Delete();
-	m_Program.Delete();
-	m_VBO.Delete();
-	m_EBO.Delete();
+	m_Texture.Shutdown();
+	m_Program.Shutdown();
+	m_VBO.Shutdown();
+	m_EBO.Shutdown();
 	glDeleteVertexArrays(1, &m_VAOId);
 }
 

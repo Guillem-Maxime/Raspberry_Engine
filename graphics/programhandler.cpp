@@ -14,7 +14,7 @@ void ProgramHandler::Init(const ProgramInitializer& init)
 	}
 }
 
-void ProgramHandler::Delete()
+void ProgramHandler::Shutdown()
 {
 	std::cerr << "deleting program : " << m_ProgramId << std::endl;
 	glDeleteProgram(m_ProgramId);

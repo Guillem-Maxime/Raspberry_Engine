@@ -38,4 +38,4 @@ namespace GLUtils
 		}
 		return result;
 	}
-};//GLUtils
+}//GLUtils

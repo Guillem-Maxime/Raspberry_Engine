@@ -3,9 +3,9 @@ OBJ = $(SRC:.cpp=.o)
 
 INCLUDE_DIR =  
 
-CXXFLAGS := $(CXXFLAGS) $(WARNINGFLAGS) -Wno-old-style-cast
+CXXFLAGS := $(CXXFLAGS) $(WARNINGFLAGS)
 
-TARGET = graphics.so
+TARGET = engine.so
 
 $(TARGET): $(OBJ)
 	@$(CXX) $(CXXFLAGS) -o $@ -shared $(OBJ)

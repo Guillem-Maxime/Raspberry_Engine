@@ -1,6 +1,7 @@
-#include "texturehandler.h"
+#include "graphics/texturehandler.h"
 
-#include "glutils.h"
+#include "graphics/glutils.h"
+#include "utils/fileutils.h"
 
 const std::string TextureHandler::ms_TextureDirectory = "textures/";
 
@@ -20,7 +21,7 @@ void TextureHandler::Prepare() const
 	LoadAndGenerateTexture();
 }
 
-void TextureHandler::Delete() const
+void TextureHandler::Shutdown() const
 {
 	glDeleteTextures(1, &m_TextureId);
 }
@@ -58,24 +59,32 @@ void TextureHandler::Unbind() const
 void TextureHandler::ApplyParameters() const
 {
 	glTexParameteri(m_TextureType, GL_TEXTURE_WRAP_S, static_cast<GLint>(m_TextureWrapType) );
+	GLUtils::GetGLError("ApplyTexParameter_Wrap_S");
 	glTexParameteri(m_TextureType, GL_TEXTURE_WRAP_T, static_cast<GLint>(m_TextureWrapType) );
+	GLUtils::GetGLError("ApplyTexParameter_Wrap_T");
 	glTexParameteri(m_TextureType, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(m_TextureFilteringType) );
-	glTexParameteri(m_TextureType, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(m_TextureFilteringType) );
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	GLUtils::GetGLError("ApplyParameters");
+	GLUtils::GetGLError("ApplyTexParameter_Min_Filter");
+	glTexParameteri(m_TextureType, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(m_TextureFilteringType) );	
+	GLUtils::GetGLError("ApplyTexParameter_Mag_Filter");
+	//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	//GLUtils::GetGLError("ApplyTexParameter_TexEnvi");
 }
 
 void TextureHandler::LoadAndGenerateTexture() const
 {
+	const char* filename{ m_File.c_str() };
+	/*
 	int width{0};
 	int height{0};
 	int nbrChannels{0};
-	const char* filename{ m_File.c_str() };
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data{ stbi_load(filename, &width, &height, &nbrChannels, 0) };
+	*/
+	FileUtils::ImageInfos infos{};
+	unsigned char* data{ FileUtils::LoadTexture(filename, infos) };
 	if(data != nullptr)
 	{
-		glTexImage2D(m_TextureType, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(m_TextureType, 0, static_cast<GLint>(infos.m_ColorChannel), infos.m_Width, infos.m_Height, 0, infos.m_ColorChannel, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(m_TextureType);
 		GLUtils::GetGLError("LoadAndGenerateTexture");
 	}
@@ -83,7 +92,7 @@ void TextureHandler::LoadAndGenerateTexture() const
 	{
 		std::cerr << "ERROR::LOADING::TEXTURE::FILE : " << m_File << std::endl;
 	}
-	stbi_image_free(data);	
+	//stbi_image_free(data);	
 }
 
 std::string TextureHandler::GetTextureTypeStr() const

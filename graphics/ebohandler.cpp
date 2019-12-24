@@ -16,6 +16,6 @@ void EBOHandler::PrepareInternal() const
 void EBOHandler::Draw() const
 {
 	Bind();
-	glDrawElements(m_DrawMode, static_cast<GLsizei>(m_Indices.size()), GL_UNSIGNED_INT, 0);
+	glDrawElements(m_DrawMode, static_cast<GLsizei>(m_Indices.size()), GL_UNSIGNED_INT, nullptr);
 	PrintErrorMessage("EBODraw");
 }

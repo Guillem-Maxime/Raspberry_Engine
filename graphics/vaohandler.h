@@ -9,6 +9,7 @@
 #include "vbohandler.h"
 
 class Camera;
+class Mesh;
 
 struct VAOInitializer
 {
@@ -26,17 +27,23 @@ public:
 	virtual ~VAOHandler() = default;
 
 	void Init(const VAOInitializer& initializer);
-	void Delete();
+	void Shutdown();
 	void Bind() const;
 	void Unbind() const;
 	void Prepare();
 	void Draw() const;
 
-	const ProgramHandler& GetProgram() const { return m_Program; } 
-	ProgramHandler& GetProgram() { return m_Program; }
-	const VBOHandler& GetVBO() const { return m_VBO; }
-	VBOHandler& GetVBO() { return m_VBO; }
-	void AddModelTransform(const glm::mat4& value) { m_ModelTransforms.push_back(value); }
+	inline void AddModelTransform(const glm::mat4& value) { m_ModelTransforms.push_back(value); }
+	
+	inline const ProgramHandler& GetProgram() const { return m_Program; } 
+	inline ProgramHandler& GetProgram() { return m_Program; }
+	
+	inline const VBOHandler& GetVBO() const { return m_VBO; }
+	inline VBOHandler& GetVBO() { return m_VBO; }
+	
+	inline Mesh* GetMesh() { return m_Mesh; }
+	inline const Mesh* GetMesh() const { return m_Mesh; }
+	inline void SetMesh(Mesh* value) { m_Mesh = value; }
 
 protected:
 	virtual void GenerateGLObjectId() override;
@@ -48,5 +55,6 @@ private:
 	EBOHandler m_EBO;
 	std::vector<glm::mat4> m_ModelTransforms{};
 	Camera* m_Camera;
+	Mesh* m_Mesh;
 	GLuint m_VAOId{0};
 };

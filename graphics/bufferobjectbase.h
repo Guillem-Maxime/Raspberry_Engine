@@ -12,7 +12,7 @@ class BufferObjectBase : public OpenGLObjectHandler, public CRTPHelper<Derived, 
 public:
 	void Bind() const;
 	void BufferData() const;
-	void Delete() const;
+	void Shutdown() const;
 	void Prepare() const;
 	void Unbind() const;
 
@@ -51,7 +51,7 @@ void BufferObjectBase<Derived>::BufferData() const
 }
 
 template<class Derived>
-void BufferObjectBase<Derived>::Delete() const
+void BufferObjectBase<Derived>::Shutdown() const
 {
 	glDeleteBuffers(1, &m_BufferId);
 }

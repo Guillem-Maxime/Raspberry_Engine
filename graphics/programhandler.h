@@ -19,7 +19,7 @@ public:
 	~ProgramHandler() = default;
 
 	void Init(const ProgramInitializer& init);
-	void Delete();
+	void Shutdown();
 	void Link();
 	void Use() const;
 

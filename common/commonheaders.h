@@ -6,6 +6,5 @@
 #include <memory>
 #include <sstream>
 #include <string>
+#include <tuple>
 #include <vector>
-
-#include "ext/stb_image.h"

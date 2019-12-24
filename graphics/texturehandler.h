@@ -18,7 +18,7 @@ public:
 	explicit TextureHandler() = default;
     
 	void Init(const TextureInfos& infos);
-	void Delete() const;
+	void Shutdown() const;
 	void Prepare() const;
 
 	inline void SetTextureFile(const std::string& value) { m_File = ms_TextureDirectory + value; }
