@@ -9,6 +9,7 @@ void TextureHandler::Init(const TextureInfos& infos)
 {
 	InitInternal();
 	SetTextureFile(infos.m_TextureFile);
+	SetTextureDimension(infos.m_TextureDimension);
 	SetTextureType(infos.m_TextureType);
 	SetTextureWrapType(infos.m_TextureWrapType);
 	SetTextureFilteringType(infos.m_TextureFilteringType);
@@ -35,10 +36,10 @@ void TextureHandler::Bind() const
 {
 	if(IsInitialized())
 	{
-		glBindTexture(m_TextureType, m_TextureId);
+		glBindTexture(m_TextureDimension, m_TextureId);
 		if(GLUtils::GetGLError("TextureBind"))
 		{
-			std::cerr << "\tID::" << m_TextureId << "::" << GetTextureTypeStr() << std::endl;
+			std::cerr << "\tID::" << m_TextureId << "::" << GetTextureDimensionStr() << std::endl;
 		}
 	}
 	else
@@ -49,22 +50,22 @@ void TextureHandler::Bind() const
 
 void TextureHandler::Unbind() const
 {
-	glBindTexture(m_TextureType, 0);
+	glBindTexture(m_TextureDimension, 0);
 	if(GLUtils::GetGLError("TextureUnbind"))
 	{
-		std::cerr << "\tID::" << m_TextureId << "::" << GetTextureTypeStr() << std::endl;
+		std::cerr << "\tID::" << m_TextureId << "::" << GetTextureDimensionStr() << std::endl;
 	}
 }
 
 void TextureHandler::ApplyParameters() const
 {
-	glTexParameteri(m_TextureType, GL_TEXTURE_WRAP_S, static_cast<GLint>(m_TextureWrapType) );
+	glTexParameteri(m_TextureDimension, GL_TEXTURE_WRAP_S, static_cast<GLint>(m_TextureWrapType) );
 	GLUtils::GetGLError("ApplyTexParameter_Wrap_S");
-	glTexParameteri(m_TextureType, GL_TEXTURE_WRAP_T, static_cast<GLint>(m_TextureWrapType) );
+	glTexParameteri(m_TextureDimension, GL_TEXTURE_WRAP_T, static_cast<GLint>(m_TextureWrapType) );
 	GLUtils::GetGLError("ApplyTexParameter_Wrap_T");
-	glTexParameteri(m_TextureType, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(m_TextureFilteringType) );
+	glTexParameteri(m_TextureDimension, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(m_TextureFilteringType) );
 	GLUtils::GetGLError("ApplyTexParameter_Min_Filter");
-	glTexParameteri(m_TextureType, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(m_TextureFilteringType) );	
+	glTexParameteri(m_TextureDimension, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(m_TextureFilteringType) );	
 	GLUtils::GetGLError("ApplyTexParameter_Mag_Filter");
 	//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	//GLUtils::GetGLError("ApplyTexParameter_TexEnvi");
@@ -84,8 +85,8 @@ void TextureHandler::LoadAndGenerateTexture() const
 	unsigned char* data{ FileUtils::LoadTexture(filename, infos) };
 	if(data != nullptr)
 	{
-		glTexImage2D(m_TextureType, 0, static_cast<GLint>(infos.m_ColorChannel), infos.m_Width, infos.m_Height, 0, infos.m_ColorChannel, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(m_TextureType);
+		glTexImage2D(m_TextureDimension, 0, static_cast<GLint>(infos.m_ColorChannel), infos.m_Width, infos.m_Height, 0, infos.m_ColorChannel, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(m_TextureDimension);
 		GLUtils::GetGLError("LoadAndGenerateTexture");
 	}
 	else
@@ -95,9 +96,9 @@ void TextureHandler::LoadAndGenerateTexture() const
 	//stbi_image_free(data);	
 }
 
-std::string TextureHandler::GetTextureTypeStr() const
+std::string TextureHandler::GetTextureDimensionStr() const
 {
-	switch(m_TextureType)
+	switch(m_TextureDimension)
 	{
 		case GL_TEXTURE_2D :
 			return "GL_TEXTURE_2D";

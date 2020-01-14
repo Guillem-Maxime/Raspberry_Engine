@@ -72,9 +72,9 @@ void VAOHandler::Prepare()
 void VAOHandler::Draw() const
 {	
 	m_Program.SetUniformVariable(m_Camera->GetProjViewMatrix(), "mProjView");
-	for(const glm::mat4& modelTransform : m_ModelTransforms)
+	for(const auto& modelTransform : m_ModelTransforms)
 	{
-		m_Program.SetUniformVariable(modelTransform, "mModel");
+		m_Program.SetUniformVariable(*modelTransform, "mModel");
 	
 		m_Program.Use();
 		GLUtils::GetGLError("Draw_UseProgram");
@@ -82,5 +82,23 @@ void VAOHandler::Draw() const
 		GLUtils::GetGLError("Draw_Bind");
 		m_EBO.Draw();
 		GLUtils::GetGLError("Draw_VBO");
+	}
+}
+
+void VAOHandler::RegisterPosition(glm::mat4* position)
+{
+	const auto findIt{ std::find( m_ModelTransforms.begin(), m_ModelTransforms.end(), position) };
+	if(findIt == m_ModelTransforms.end())
+	{
+		m_ModelTransforms.push_back(*findIt);
+	}
+}
+
+void VAOHandler::UnregisterPosition(glm::mat4* position)
+{
+	const auto findIt{ std::find( m_ModelTransforms.begin(), m_ModelTransforms.end(), position) };
+	if(findIt != m_ModelTransforms.end())
+	{
+		m_ModelTransforms.erase(findIt);
 	}
 }

@@ -9,6 +9,7 @@ GRAPHICS_DIR	:= $(MAKE_DIR)/graphics
 UTILS_DIR		:= $(MAKE_DIR)/utils
 COMMON_DIR		:= $(MAKE_DIR)/common
 EXT_DIR			:= $(MAKE_DIR)/ext
+WORLD_DIR		:= $(MAKE_DIR)/world
 
 INCLUDE := $(MAKE_DIR)/
 
@@ -30,6 +31,8 @@ all:
 	@$(MAKE) -C $(EXT_DIR)    		-f ext.mk
 	@$(MAKE) -C $(GRAPHICS_DIR) 	-f graphics.mk
 	@$(MAKE) -C $(UTILS_DIR)    	-f utils.mk
+	@$(MAKE) -C $(WORLD_DIR)		-f world.mk
+	@$(MAKE) -C $(WORLD_DIR)/components -f components.mk
 
 	@$(MAKE) -C $(SRC_DIR) 			-f rasp_earth_display.mk
 
@@ -40,5 +43,7 @@ clean:
 	@$(MAKE) -C $(GRAPHICS_DIR) 	-f graphics.mk clean
 	@$(MAKE) -C $(UTILS_DIR)		-f utils.mk clean	
 	@$(MAKE) -C $(EXT_DIR)			-f ext.mk clean
-	@$(MAKE) -C $(ENGINE_DIR)			-f engine.mk clean
+	@$(MAKE) -C $(ENGINE_DIR)		-f engine.mk clean
+	@$(MAKE) -C $(WORLD_DIR)		-f world.mk clean
+	@$(MAKE) -C $(WORLD_DIR)/components	-f components.mk clean
 
