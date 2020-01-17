@@ -116,7 +116,7 @@ std::vector<TextureHandler> Model::LoadMaterialTextures(aiMaterial* material, ai
 		if(!skip)
 		{
 			TextureHandler texture;
-			texture.type = typeName;
+			texture.SetTextureAiType(typeName);
 			result.push_back(texture);
 			m_TexturesLoaded.push_back(texture);
 		}

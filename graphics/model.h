@@ -5,9 +5,12 @@
 #include "graphics/mesh.h"
 #include "graphics/texturehandler.h"
 
+#include <assimp/material.h>
+
 struct aiNode;
 struct aiScene;
 struct aiMesh;
+struct aiMaterial;
 
 using MeshPtr = std::unique_ptr<Mesh>;
 

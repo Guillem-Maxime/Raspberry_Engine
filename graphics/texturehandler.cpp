@@ -10,7 +10,7 @@ void TextureHandler::Init(const TextureInfos& infos)
 	InitInternal();
 	SetTextureFile(infos.m_TextureFile);
 	SetTextureDimension(infos.m_TextureDimension);
-	SetTextureType(infos.m_TextureType);
+	SetTextureAiType(infos.m_TextureAiType);
 	SetTextureWrapType(infos.m_TextureWrapType);
 	SetTextureFilteringType(infos.m_TextureFilteringType);
 }

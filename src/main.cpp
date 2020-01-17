@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 
 	TextureInfos textureInfos;
 	textureInfos.m_TextureFile = testTextureFile;
-	textureInfos.m_TextureType = GL_TEXTURE_2D;
+	textureInfos.m_TextureDimension = GL_TEXTURE_2D;
     
 	glm::mat4 model{ glm::mat4(1.0f) };
     model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -79,7 +79,7 @@ int main(int argc, char** argv)
 	VAOHandler vao1;
 	vao1.Init(vaoInit1);
 	vao1.Prepare();
-	vao1.AddModelTransform(model);
+	//vao1.AddModelTransform(model);
 
 	std::cout << "Drawing Loop" << std::endl;
 	int frameCount{0};
@@ -146,7 +146,7 @@ void InitTriangles(VAOInitializer& vaoInit1)
 	indices.push_back(3);
 	Mesh firstMesh;
 	firstMesh.SetVertices(firstVertices);
-	firstMesh.SetIndices(indices);
+	//firstMesh.SetIndices(indices);
 	VBOInfos firstVBOInfos;
 	firstVBOInfos.m_Mesh = firstMesh;
 	EBOInfos firstEBOInfos;
