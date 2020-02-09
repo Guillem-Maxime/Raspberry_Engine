@@ -13,13 +13,11 @@ void OpenGLRenderManager::OnInit()
 	glutInitWindowSize(800, 600);
 	glutInitContextVersion(3, 3);
 	glutInitContextProfile(GLUT_CORE_PROFILE);
-	std::cout << "OpenGLRenderManager OnInit()";
 }
 
 void OpenGLRenderManager::OnEngineStart()
 {
 	super::OnEngineStart();
-	std::cout << "OpenGLRenderManager" << "OnEngineStart" << std::endl;
 	m_WindowId = glutCreateWindow("Hello Window");
 	if(glewInit())
 	{

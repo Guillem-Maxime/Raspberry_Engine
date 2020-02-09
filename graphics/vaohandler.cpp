@@ -71,6 +71,7 @@ void VAOHandler::Prepare()
 
 void VAOHandler::Draw() const
 {	
+	int drawCount{0};
 	m_Program.SetUniformVariable(m_Camera->GetProjViewMatrix(), "mProjView");
 	for(const auto& modelTransform : m_ModelTransforms)
 	{
@@ -82,6 +83,8 @@ void VAOHandler::Draw() const
 		GLUtils::GetGLError("Draw_Bind");
 		m_EBO.Draw();
 		GLUtils::GetGLError("Draw_VBO");
+		drawCount++;
+		std::cout << drawCount << std::endl;
 	}
 }
 

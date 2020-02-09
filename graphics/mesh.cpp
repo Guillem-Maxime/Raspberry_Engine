@@ -2,6 +2,16 @@
 
 #include "graphics/vaohandler.h"
 
+void Mesh::SetIndices(const std::vector<GLuint>& indices) 
+{ 
+	m_Indices = indices; 
+}
+
+void Mesh::SetTextures(const std::vector<TextureHandler>& textures) 
+{ 
+	m_Textures = textures; 
+}
+
 void Mesh::SetVAO(VAOHandler* value) 
 { 
 	m_VAO = value; 

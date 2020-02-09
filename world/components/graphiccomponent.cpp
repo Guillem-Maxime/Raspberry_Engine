@@ -6,6 +6,7 @@
 
 void GraphicComponent::OnEntityCreate()
 {
+	std::cout << "Graphic Component On Entity Create" << std::endl;
 	m_Model = ModelManager::Get()->RegisterModel(m_ModelPath);
 	if(m_Model != nullptr)
 	{

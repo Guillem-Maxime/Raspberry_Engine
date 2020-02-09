@@ -24,6 +24,8 @@ public:
 	void RegisterPosition(glm::mat4* position);
 	void UnregisterPosition(glm::mat4* position);
 
+	void SetFileName(const std::string& fileName) { m_FileName = fileName; }
+
 private:
 	std::string m_FileName{};
 	std::vector<MeshPtr> m_Meshes{};

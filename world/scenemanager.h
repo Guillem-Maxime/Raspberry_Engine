@@ -16,7 +16,7 @@ public:
 	virtual void OnUpdate() override;
 	virtual void OnEngineStop() override;
 
-	virtual std::string GetName() const override { return "EntityComponent"; }
+	virtual std::string GetName() const override { return "SceneManager"; }
 
 private:
 	std::vector<EntityPtr> m_Entities{};

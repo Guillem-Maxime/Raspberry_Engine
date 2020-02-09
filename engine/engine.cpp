@@ -2,11 +2,13 @@
 
 #include "engine/enginecomponent.h"
 #include "graphics/openglrendermanager.h"
+#include "world/scenemanager.h"
 
 
 void Engine::Create()
 {
 	RegisterComponent<OpenGLRenderManager>();
+	RegisterComponent<SceneManager>();
 	for(const auto* c : m_Components)
 	{
 		std::cout << c->GetName() << " Registered" << std::endl;

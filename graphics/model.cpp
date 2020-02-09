@@ -4,16 +4,33 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
+#include "graphics/openglrendermanager.h"
+
 #include "utils/fileutils.h"
 
 void Model::Load()
 {
 	const aiScene* scene{ FileUtils::Load3DModel(m_FileName) };
-	ProcessNode(scene->mRootNode, scene);
+	if(scene != nullptr)
+	{
+		ProcessNode(scene->mRootNode, scene);
+		for(const auto& mesh : m_Meshes)
+		{
+			OpenGLRenderManager::Get()->RegisterToRender(mesh.get());
+		}
+	}
+	else
+	{
+		std::cerr << "ERROR::NO:3D:MODEL:LOADED" << std::endl;
+	}
 }
 
 void Model::ProcessNode(const aiNode* node, const aiScene* scene)
 {
+	if(scene == nullptr)
+		std::cout << "scene should not be nullptr here" << std::endl;
+	if(node == nullptr)
+		std::cout << "node should not be nullptr here" << std::endl;
 	for(unsigned int i{0}; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh{ scene->mMeshes[node->mMeshes[i]] };
@@ -74,10 +91,16 @@ Mesh Model::CreateMesh(const aiMesh* mesh, const aiScene* scene)
 	{
 		aiMaterial* material{ scene->mMaterials[mesh->mMaterialIndex] };
 		std::vector<TextureHandler> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-	   textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());	
+	    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());	
 		std::vector<TextureHandler> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-	   textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());	
+	    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());	
 	}
+
+	Mesh result;
+	result.SetVertices(vertices);
+	result.SetIndices(indices);
+	result.SetTextures(textures);
+	return result;
 }
 
 void Model::RegisterPosition(glm::mat4* position)

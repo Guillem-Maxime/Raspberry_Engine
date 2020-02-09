@@ -7,10 +7,12 @@ void SceneManager::OnEngineStart()
 {
 	LoadStaticEntities();
 	LoadSavedEntities();
+	std::cout << "Entities number : " << m_Entities.size() << std::endl;
 	for(auto& e : m_Entities)
 	{
 		e->Create();
 	}
+	std::cout << "After entities created" << std::endl;
 }
 
 void SceneManager::OnUpdate()
@@ -25,6 +27,7 @@ void SceneManager::OnEngineStop()
 
 void SceneManager::UpdateEntities()
 {
+	std::cout << "Update entities" << std::endl;
 	for(auto& e : m_Entities)
 	{
 		e->Update();
@@ -37,7 +40,8 @@ void SceneManager::LoadStaticEntities()
 	Entity* earthEntity{ m_Entities.back().get() };
 	
 	GraphicComponent* graphicComponent{ earthEntity->RegisterComponent<GraphicComponent>() };
-	graphicComponent->SetPath("model/earth.usdz");
+	graphicComponent->SetPath("model/test.obj");
+	std::cout << "Entities number : " << m_Entities.size() << std::endl; 
 }
 
 void SceneManager::LoadSavedEntities()

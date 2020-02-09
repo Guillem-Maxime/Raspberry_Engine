@@ -19,6 +19,7 @@ void Entity::Destroy()
 
 void Entity::CreateComponents()
 {
+	std::cout << "number components : " << m_Components.size() << std::endl;
 	for(auto& c : m_Components)
 	{
 		c->OnEntityCreate();
