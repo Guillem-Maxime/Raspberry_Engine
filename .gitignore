@@ -36,3 +36,17 @@
 
 # vscode
 /.vscode/
+*.idb
+*.pdb
+*.lastbuildstate
+*.vcxproj
+*.user
+*.filters
+*.log
+*.sln
+*.ipch
+*.opendb
+*.db
+Rasp_Engine/Rasp_Engine/Debug/Rasp_Engine.tlog/unsuccessfulbuild
+Rasp_Engine/.vs/Rasp_Engine/v15/.suo
+*.tlog
