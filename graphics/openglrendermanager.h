@@ -19,6 +19,7 @@ public:
 
 	virtual std::string GetName() const override { return "OpenGLRenderManager";}
 	void RegisterToRender(Mesh* mesh);
+	void RegisterToRender(Mesh mesh);
 
 private:
 	using super = EngineComponent;

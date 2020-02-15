@@ -83,11 +83,12 @@ int main(int argc, char** argv)
 
 	std::cout << "Drawing Loop" << std::endl;
 	int frameCount{0};
-    while(frameCount < 10000)
+    while(frameCount < 100)
     //while(1)
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 		GLUtils::GetGLError("glClear");
+		engine->Update();
 		vao1.Draw();	
 		glFlush();
 		GLUtils::GetGLError("glFlush");
@@ -124,13 +125,13 @@ void InitTriangles(VAOInitializer& vaoInit1)
 	std::vector<Vertex1P1N1U> firstVertices{};
 	firstVertices.reserve(3);
    	Vertex1P1N1U v11, v12, v13, v14;
-    v11.m_Position = {-0.90, -0.90, 0.00};
+    v11.m_Position = {-0.90, -0.90, 0.00, 1.0f};
     v11.m_Texture = {0.0, 0.0};
-    v12.m_Position = { 0.90, -0.90, 0.00};
+    v12.m_Position = { 0.90, -0.90, 0.00, 1.0f};
     v12.m_Texture = {1.0, 0.0};
-    v13.m_Position = { 0.90,  0.90, 0.00};
+    v13.m_Position = { 0.90,  0.90, 0.00, 1.0f};
     v13.m_Texture = {1.0, 1.0};
-    v14.m_Position = {-0.90,  0.90, 0.00};
+    v14.m_Position = {-0.90,  0.90, 0.00, 1.0f};
     v14.m_Texture = {0.0, 1.0};
     firstVertices.push_back(v11);
     firstVertices.push_back(v12);

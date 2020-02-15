@@ -18,6 +18,11 @@
 
 namespace FileUtils
 {
+	void Load3DDefaultModel(const std::string& fileName, std::vector<std::unique_ptr<Mesh>>& outMeshes, std::vector<TextureHandler>& outTextures);
+	void ProcessNode(const aiNode* node, const aiScene* scene, std::vector<std::unique_ptr<Mesh>>& outMeshes, std::vector<TextureHandler>& outTextures);
+	Mesh CreateMesh(const aiMesh* mesh, const aiScene* scene, std::vector<TextureHandler>& outTextures);
+	std::vector<TextureHandler> LoadMaterialTextures(aiMaterial* material, aiTextureType type, const std::string& typeName, std::vector<TextureHandler>& outTextures);
+
 	void ReadFile(const std::string& fileName, std::string& outString)
 	{
 		outString.clear();
@@ -99,32 +104,27 @@ namespace FileUtils
 		}
 	}
 
-	void Load3DModel(const std::string& fileName, std::vector<Mesh>& outMeshes)
+	void Load3DModel(const std::string& fileName, std::vector<std::unique_ptr<Mesh>>& outMeshes, std::vector<TextureHandler>& outTextures)
 	{
 		const EFileType fileType{ GetFileTypeFromExtension(fileName) };
 		switch(fileType)
 		{
 			case EFileType::OBJ :
-				Load3DObjModel(fileName, outMeshes);
+				Load3DDefaultModel(fileName, outMeshes, outTextures);
 				break;
 			default:
-				Load3DDefaultModel(fileName, outMeshes);
+				std::cerr << "ERROR::UNKNOWN:3D:FILE:LOADED" << std::endl;
 				break;
 		}
 	}
 
-	void Load3DObjModel(const std::string& fileName, std::vector<Mesh>& outMeshes)
-	{
-
-	}
-
-	void Load3DDefaultModel(const std::string& fileName, std::vector<Mesh>& outMeshes)
+	void Load3DDefaultModel(const std::string& fileName, std::vector<std::unique_ptr<Mesh>>& outMeshes, std::vector<TextureHandler>& outTextures)
 	{
 		Assimp::Importer importer;
-		aiScene* scene{ importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs) };
+		const aiScene* scene{ importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs) };
 		if(scene != nullptr)
 		{
-			ProcessNode(scene->mRootNode, scene);
+			ProcessNode(scene->mRootNode, scene, outMeshes, outTextures);
 			for(const auto& mesh : outMeshes)
 			{
 				OpenGLRenderManager::Get()->RegisterToRender(mesh.get());
@@ -136,7 +136,7 @@ namespace FileUtils
 		}
 	}
 
-	void ProcessNode(const aiNode* node, const aiScene* scene, std::vector<Mesh>& outMeshes)
+	void ProcessNode(const aiNode* node, const aiScene* scene, std::vector<std::unique_ptr<Mesh>>& outMeshes, std::vector<TextureHandler>& outTextures)
 	{
 		if(scene == nullptr)
 			std::cout << "scene should not be nullptr here" << std::endl;
@@ -145,16 +145,16 @@ namespace FileUtils
 		for(unsigned int i{0}; i < node->mNumMeshes; i++)
 		{
 			aiMesh* mesh{ scene->mMeshes[node->mMeshes[i]] };
-			outMeshes.push_back(std::make_unique<Mesh>(CreateMesh(mesh, scene)) );
+			outMeshes.push_back(std::make_unique<Mesh>(CreateMesh(mesh, scene, outTextures)) );
 		}
 		for(unsigned int i{0}; i < node->mNumChildren; i++)
 		{
-			ProcessNode(node->mChildren[i], scene);
+			ProcessNode(node->mChildren[i], scene, outMeshes, outTextures);
 		}
 	}
 
 	//temp
-	Mesh CreateMesh(const aiMesh* mesh, const aiScene* scene)
+	Mesh CreateMesh(const aiMesh* mesh, const aiScene* scene, std::vector<TextureHandler>& outTextures)
 	{
 		std::vector<Vertex1P1N1U> vertices;
 		vertices.reserve(mesh->mNumVertices);
@@ -164,10 +164,11 @@ namespace FileUtils
 		for(unsigned int i{ 0 }; i < mesh->mNumVertices; i++)
 		{
 			Vertex1P1N1U vertex;
-			glm::vec3 vector;
+			glm::vec4 vector;
 			vector.x = mesh->mVertices[i].x;
 			vector.y = mesh->mVertices[i].y;
 			vector.z = mesh->mVertices[i].z;
+			vector.w = 1.0f;
 			vertex.m_Position = vector;
 
 			vector.x = mesh->mNormals[i].x;
@@ -201,9 +202,9 @@ namespace FileUtils
 		if(mesh->mMaterialIndex >= 0)
 		{
 			aiMaterial* material{ scene->mMaterials[mesh->mMaterialIndex] };
-			std::vector<TextureHandler> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+			std::vector<TextureHandler> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse", outTextures);
 			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());	
-			std::vector<TextureHandler> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+			std::vector<TextureHandler> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular", outTextures);
 			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());	
 		}
 
@@ -214,7 +215,7 @@ namespace FileUtils
 		return result;
 	}
 
-	std::vector<TextureHandler> Model::LoadMaterialTextures(aiMaterial* material, aiTextureType type, const std::string& typeName)
+	std::vector<TextureHandler> LoadMaterialTextures(aiMaterial* material, aiTextureType type, const std::string& typeName, std::vector<TextureHandler>& outTextures)
 	{
 		std::vector<TextureHandler> result;
 		for(unsigned int i{ 0 }; i < material->GetTextureCount(type); i++)
@@ -222,7 +223,7 @@ namespace FileUtils
 			aiString str;
 			material->GetTexture(type, i, &str);
 			bool skip{false};
-			for(const auto& tex : m_TexturesLoaded)
+			for(const auto& tex : outTextures)
 			{
 				if(std::strcmp(tex.GetFile().c_str(), str.C_Str()) == 0)
 				{
@@ -236,7 +237,7 @@ namespace FileUtils
 				TextureHandler texture;
 				texture.SetTextureAiType(typeName);
 				result.push_back(texture);
-				m_TexturesLoaded.push_back(texture);
+				outTextures.push_back(texture);
 			}
 		}
 		return result;

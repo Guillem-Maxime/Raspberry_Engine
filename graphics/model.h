@@ -18,8 +18,6 @@ class Model
 {
 public:
 	void Load();
-	void ProcessNode(const aiNode* node, const aiScene* scene);
-	Mesh CreateMesh(const aiMesh* mesh, const aiScene* scene);
 
 	void RegisterPosition(glm::mat4* position);
 	void UnregisterPosition(glm::mat4* position);
@@ -30,6 +28,4 @@ private:
 	std::string m_FileName{};
 	std::vector<MeshPtr> m_Meshes{};
 	std::vector<TextureHandler> m_TexturesLoaded{};
-
-	std::vector<TextureHandler> LoadMaterialTextures(aiMaterial* material, aiTextureType type, const std::string& typeName);
 };

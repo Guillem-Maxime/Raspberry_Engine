@@ -12,7 +12,7 @@ struct AttribPointerInfo
 
 struct Vertex1P1N1U
 {
-	glm::vec3 m_Position{ 0.0f, 0.0f, 0.0f };
+	glm::vec4 m_Position{ 0.0f, 0.0f, 0.0f, 0.0f };
 	glm::vec3 m_Normal{ 0.0f, 0.0f, 0.0f };
 	glm::vec2 m_Texture{ 0.0f, 0.0f };
 

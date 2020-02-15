@@ -58,3 +58,20 @@ void OpenGLRenderManager::RegisterToRender(Mesh* mesh)
 		mesh->SetVAO(findIt->get());
 	}
 }
+
+void OpenGLRenderManager::RegisterToRender(Mesh mesh)
+{
+	const auto closure = [mesh](const VAOPtr& vao){ return &mesh == vao.get()->GetMesh(); };
+	const auto findIt{ std::find_if(m_VAOs.begin(), m_VAOs.end(), closure) };
+	if(findIt == m_VAOs.end())
+	{
+		VAOPtr& newVAO{ m_VAOs.emplace_back(std::make_unique<VAOHandler>()) };
+		VAOHandler* vao = newVAO.get();
+		mesh.SetVAO(vao);
+		vao->SetMesh(&mesh);
+	}
+	else
+	{
+		mesh.SetVAO(findIt->get());
+	}
+}
